@@ -1,5 +1,5 @@
 {
-  "name": "rest-api-docker",
+  "name": "lodos-web-application",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "path": "^0.12.7",
+    "soap": "^0.32.0"
   }
 }

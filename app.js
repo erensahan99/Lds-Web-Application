@@ -1,14 +1,29 @@
 const express = require('express');
+const soap = require('soap');
+const path = require('path');
 const app = express()
 
-port = process.env.PORT || 3000
+const url = "http://www.dneonline.com/calculator.asmx?wsdl"
 
-app.get('/',(req,res) => res.send('My Rest API running on port ' + port)); 
+var PORT = process.env.PORT || 3000
 
-app.get('/page2',function(req,res) {
-  res.sendFile(__dirname + '/express/index.html');
+//app.get('/',(req,res) => res.send('My Rest API running on port ' + PORT)); 
+
+let resu;
+
+app.get('/', function (req, res) {
+  let nums = {
+    intA: 15,
+    intB: 5
+  }
+  soap.createClient(url, (err, client) => {
+    client.Add(nums, (err, result) => {
+      res.send('<html><body><h1>Hello :)</h1><br><h3>' + result.AddResult + '</h3></body></html>');
+    });
   });
+  //res.sendFile(path.join(__dirname, 'express', 'index.html'),{result:result});
+});
 
-app.listen(port, () => {
-    console.log('My Rest API running on port ' + port);
+app.listen(PORT, () => {
+  console.log('My Rest API running on port ' + PORT);
 })
