@@ -1,5 +1,5 @@
 from zeep import Client
 
-client = Client(wsdl="http://localhost:3000/soapservice?wsdl")
+client = Client(wsdl="http://lodos-web-application.herokuapp.com/soapservice?wsdl")
 
 print(client.service.Add(5,10))
