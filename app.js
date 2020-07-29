@@ -1,44 +1,27 @@
-var express = require('express');
-var router = express.Router();
-const soap = require('soap');
-const path = require('path');
-const app = express()
+var http = require('http');
+var soap = require('soap');
 
-app.set('views', __dirname + '/public/views');
-app.set('view engine', 'pug');
+var soapservice = {
+    Hello_Service: {
+        Hello_Port: {
+            // This is how to define an asynchronous function.
+            sayHello: function (args, callback) {
+                // do some work
+                console.log('sayHello: '+JSON.stringify(args));
+                callback({'greeting': 'Hello '+args.firstName.$value});
+            }
+        }
+    }
+};
 
-const url = "http://www.dneonline.com/calculator.asmx?wsdl"
-
-var PORT = process.env.PORT || 3000
-
-//app.get('/',(req,res) => res.send('My Rest API running on port ' + PORT)); 
-
-/*app.get('/', function (req, res) {
-  let nums = {
-    intA: 15,
-    intB: 5
-  }
-  soap.createClient(url, (err, client) => {
-    client.Add(nums, (err, result) => {
-      res.send('<html><body><h1>Hello :)</h1><br><h3>' + result.AddResult + '</h3></body></html>');
+var wsdlxml = require('fs').readFileSync('soapservice.wsdl', 'utf8'),
+    server = http.createServer(function (request, response) {
+        response.end("404: Not Found: " + request.url);
     });
-  });
-  //res.sendFile(path.join(__dirname, 'express', 'index.html'),{result:result});
-});
-*/
-app.get('/', function (req, res, next) {
-  let nums = {
-    intA: 15,
-    intB: 5
-  };
-  soap.createClient(url, (err, client) => {
-    client.Add(nums, (err, result) => {
-      res.render('index', { resu: result.AddResult })
-    });
-  });
-  
-});
 
-app.listen(PORT, () => {
-  console.log('My Rest API running on port ' + PORT);
-})
+var PORT = 3000;
+
+server.listen(PORT);
+console.log('server running on port ' + PORT);
+
+soap.listen(server, '/soapservice', soapservice, wsdlxml);
