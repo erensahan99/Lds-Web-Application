@@ -19,7 +19,7 @@ var wsdlxml = require('fs').readFileSync('soapservice.wsdl', 'utf8'),
         response.end("404: Not Found: " + request.url);
     });
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 server.listen(PORT);
 console.log('server running on port ' + PORT);
