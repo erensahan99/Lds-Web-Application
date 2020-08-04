@@ -3,16 +3,12 @@
 /**
  * Module dependencies.
  */
-var soap = require('soap');
 var app = require('../app');
 var debug = require('debug')('lodos-web-applicationx:server');
 var http = require('http');
+var mosca = require('mosca');
 
 
-var wsdlxml = require('fs').readFileSync(__dirname + '/soapservice.wsdl', 'utf8'),
-        server = http.createServer(function (request, response) {
-            response.end("404: Not Found: " + request.url);
-        });
 
 /**
  * Get port from environment and store in Express.
@@ -34,14 +30,12 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-soap.listen(server, '/soapservice', wsdlxml);
 
-soap.log = function(type, data) {
-  console.log(":))")
-};
+var serverM = new mosca.Server();
 
-
-
+serverM.on('ready', function(){
+console.log("ready");
+});
 /**
  * Normalize a port into a number, string, or false.
  */
