@@ -1,3 +1,5 @@
+var mqtt = require('mqtt');
+require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -40,3 +42,30 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
+
+
+var options = {
+    port: 1883,
+    host: 'mqtt://node02.myqtthub.com',
+    clientId: process.env.clientId,
+    username: process.env.username,
+    password: process.env.password,
+    keepalive: 60,
+    reconnectPeriod: 1000,
+    rejectUnauthorized: true
+};
+var client = mqtt.connect('mqtt://node02.myqtthub.com', options);
+client.on('connect', function () {
+    console.log('connected');
+    // subscribe to a topic
+    client.subscribe('abc', function () {
+        // when a message arrives, do something with it
+        client.on('message', function (topic, message, packet) {
+            console.log("Received '" + message + "' on '" + topic + "'");
+        });
+    });
+});
+
+client.on('error', function(err) {
+    console.log(err);
+});
