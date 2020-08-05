@@ -8,7 +8,6 @@ var logger = require('morgan');
 var favicon = require('serve-favicon');
 
 var indexRouter = require('./routes/index');
-var soapRouter = require('./routes/soap');
 const {
     count
 } = require('console');
@@ -47,8 +46,7 @@ app.use(function (err, req, res, next) {
 
 module.exports = app;
 
-
-
+//MQTT Server Connection
 var options = {
     port: process.env.port,
     host: process.env.host,
@@ -77,3 +75,4 @@ client.on('connect', function () {
 client.on('error', function (err) {
     console.log(err);
 });
+
