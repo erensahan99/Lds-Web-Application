@@ -24,7 +24,9 @@ function startConnect() {
     client.connect({ 
         onSuccess: onConnect,
         userName : username,
-        password : password
+        password : password,
+        useSSL: true,
+        cleanSession : true,
     });
 }
 
