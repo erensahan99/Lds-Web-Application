@@ -60,7 +60,7 @@ var client = mqtt.connect(process.env.host, options);
 client.on('connect', function () {
     console.log('connected');
     // subscribe to a topic
-    client.subscribe('eren.sahan99@gmail.com/abc', function () {
+    client.subscribe('abc', function () {
         // when a message arrives, do something with it
         client.on('message', function (topic, message, packet) {
 

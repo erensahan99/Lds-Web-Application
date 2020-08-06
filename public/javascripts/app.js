@@ -26,7 +26,7 @@ function startConnect() {
         userName : username,
         password : password,
         useSSL: true,
-        cleanSession : true,
+        cleanSession : true
     });
 }
 
