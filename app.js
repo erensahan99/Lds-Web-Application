@@ -6,18 +6,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var favicon = require('serve-favicon');
+var passport = require('passport');
+var session = require('express-session');
+let flash = require('connect-flash')
 
 var indexRouter = require('./routes/index');
-const {
-    count
-} = require('console');
+
+require('./passport_setup')(passport)
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use(favicon(__dirname + '/public/images/icon.png'));
+app.use(flash())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({
@@ -25,6 +27,17 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/images/icon.png'));
+
+app.use(session({
+    secret: 'process.env.SESSION_SECRET',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 app.use('/', indexRouter);
 
@@ -56,6 +69,7 @@ var options = {
     keepalive: 60,
     rejectUnauthorized: true
 };
+
 var client = mqtt.connect(process.env.host, options);
 client.on('connect', function () {
     console.log('connected');
@@ -66,8 +80,8 @@ client.on('connect', function () {
 
             console.log("Message received on'" + topic + "': " + message);
         });
-        var counter = 0;
-        
+
+
 
     });
 });
@@ -75,4 +89,3 @@ client.on('connect', function () {
 client.on('error', function (err) {
     console.log(err);
 });
-

@@ -1,0 +1,28 @@
+doctype html
+html(lang='en')
+  include ../common/header.pug
+  +head("Login to Starter MVP")
+  body.bg-secondary
+    header
+      include ../common/navbar.pug
+      +navbar()
+      br
+      br
+      br
+      .container
+        .row
+          .col-sm-12.offset-md-2.col-md-8
+            .jumbotron.p-4
+              h2.text-center.mb-5 Login
+              .row
+                .col-sm-12.col-md-12.col-xs-12
+                  form(action='/login', method='POST')
+                    div.formgroup
+                      input(placeholder='Username', required=true, name='username', type='text', value='').form-control
+                      br
+                      input(placeholder='Password',required=true, name='password', type='password', value='').form-control
+                      div.text-center
+                        button.mt-3.btn.btn-dark(type='submit') Log in
+
+    include ../common/footer.pug
+    +footer()
