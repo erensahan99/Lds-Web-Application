@@ -24,10 +24,15 @@ html
         input#topic(type="text" name="topic" value="abc")
         br
         br
+        h1(id="data") Data: No Data
+        
         input(type="button" onclick="startConnect()" value="Connect")
         input(type="button" onclick="startDisconnect()" value="Disconnect")
       #messages
       a(href="/login") login
-  footer
+
+    include common/footer.pug
+    +footer()
     script(src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript")
+    script(src="http://code.jquery.com/jquery-1.10.1.min.js" type="text/javascript")
     script(src="/javascripts/app.js" type="text/javascript")

@@ -52,8 +52,9 @@ function onConnectionLost(responseObject) {
 
 // Called when a message arrives
 function onMessageArrived(message) {
+    $('#data').text("Data: " + message.payloadString);
     console.log("onMessageArrived: " + message.payloadString);
-    document.getElementById("messages").innerHTML += '<span>Topic: ' + message.destinationName + '  | ' + message.payloadString + '</span><br/>';
+    // document.getElementById("messages").innerHTML += '<span>Topic: ' + message.destinationName + '  | ' + message.payloadString + '</span><br/>';
 }
 
 // Called when the disconnection button is pressed
