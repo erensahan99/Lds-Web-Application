@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const uuidv4 = require('uuid/v4');
+const uuid = require('uuid');
 
 require('dotenv').config()
 
@@ -9,7 +9,7 @@ module.exports = {
         const username = process.env.SEED_ADMIN_USERNAME;
         const password = process.env.SEED_ADMIN_PASSWORD;
         return queryInterface.bulkInsert('Users', [{
-            userId: uuidv4(),
+            userId: uuid.v4(),
             username: username,
             password: bcrypt.hashSync(password, bcrypt.genSaltSync(8),null),
             isAdmin: true,
