@@ -5,7 +5,10 @@ exports.isLoggedin = function (req, res, next) {
 	if (req.user) {
 		next();
 	} else
-		res.render('user/login', { form_data: {}, errors: {} });
+		res.render('user/login', {
+			form_data: {},
+			errors: {}
+		});
 }
 
 exports.isAdmin = function (req, res, next) {
@@ -13,4 +16,18 @@ exports.isAdmin = function (req, res, next) {
 		next();
 	else
 		next(createError(404, "Page does not exist."));
+}
+
+exports.admin_userRouter = function (req, res, next) {
+	if (req.user) {
+		if (req.user.isAdmin)
+			res.render('admin/adminPage', {
+				user: req.user.dataValues
+			});
+		else
+			res.render('user/index', {
+				user: req.user.dataValues
+			});
+	} else
+		next();
 }
