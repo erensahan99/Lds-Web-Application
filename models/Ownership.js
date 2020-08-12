@@ -20,5 +20,19 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   })
+
+  Ownership.associate = models => {
+    Ownership.hasOne(models.Vehicle, {
+      foreignKey: 'vehicleId',
+      constraints: false
+    });
+  }
+  Ownership.associate = models => {
+    Ownership.hasOne(models.User, {
+      foreignKey: 'userId',
+      constraints: false
+    });
+  }
+
   return Ownership;
 }

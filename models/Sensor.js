@@ -1,21 +1,13 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Sensor = sequelize.define('Sensor', {
-    senosorId: {
+    sensorId: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    sensorId: {
-      allowNull: false,
-      type: DataTypes.UUID,
-      references: {
-        model: 'Sensors',
-        key: 'sensorId'
-      }
-    },
-    vechileId: {
+    vehicleId: {
       allowNull: false,
       type: DataTypes.UUID,
       references: {
@@ -28,5 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   })
+
+  Sensor.associate = models => {
+    Sensor.hasOne(models.Vehicle,{
+      foreignKey: 'vehicleId',
+      constraints: false
+  });
+  };
+
   return Sensor;
 }

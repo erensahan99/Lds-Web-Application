@@ -20,5 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   })
+
+  Data.associate = models => {
+    Data.hasOne(models.Sensor, {
+      foreignKey: 'sensorId',
+      constraints: false
+    });
+  }
+
   return Data;
 }

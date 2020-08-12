@@ -8,7 +8,7 @@ module.exports = {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4
             },
-            vechileId: {
+            vehicleId: {
                 allowNull: false,
                 type: Sequelize.UUID,
                 references: {
