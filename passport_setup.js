@@ -20,6 +20,7 @@ module.exports = function (passport) {
             if (user == null) {
                 done(new Error('Böyle bir kullanıcı bulunmamaktadır.'))
             }
+            delete user.dataValues.password; 
             done(null, user);
         })
     });
@@ -45,7 +46,7 @@ module.exports = function (passport) {
                     req.flash('message', 'Incorrect username or password');
                     return done(null, false);
                 }
-                console.log("==> " + user.isAdmin)
+            delete user.dataValues.password; 
             return done(null, user);
             }).catch(err => {
                 done(err, false);
