@@ -1,18 +1,11 @@
 mixin navbar(user)
-  nav.navbar.navbar-expand.navbar-dark.bg-dark
-    a(href="/", aria-label="Golden Goose").navbar-brand.mr-0.mr-md-2
-      img(src="/images/icon.png", width="36", height="36")
+  nav.navbar.navbar-expand.navbar-dark.bg-dark.prl-0
+    a(href="/", aria-label="Golden Goose").navbar-brand.mr-0.md-2
+      img(src="/images/icon.png", width="50", height="50")
     .collapse.navbar-collapse
     .navbar-right
       if user
-        span.navbar-text Hello #{user.email}!
+        span.mr-3.navbar-text #{user.name} #{user.lastname}
     .navbar-right
-      ul.navbar-nav.mr-auto
-        if user
-            li.nav-item
-            a.nav-link(href="/logout") Logout
-        else
-            li.nav-item
-            a.nav-link(href="/signup") Sign up
-            li.nav-item
-            a.nav-link(href="/login") Login
+      a.btn.btn-dark(href='javascript:void(0)', onclick='toggleNav()',style="font-size:30px;",id="sidebarButton") ☰
+  

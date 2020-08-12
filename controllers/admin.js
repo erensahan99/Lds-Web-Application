@@ -11,13 +11,110 @@ const hashGenerator = function (password) {
 
 
 exports.adminPage = function (req, res, next) {
-    res.render('user/adminPage');
+    res.render('admin/adminPage', {
+        user: req.user.dataValues
+    });
+}
+
+exports.userList = function (req, res, next) {
+    return models.User.findAll().then(users => {
+        res.render('admin/userList', {
+            user: req.user.dataValues,
+            users: users
+        });
+    })
+}
+
+exports.addUserPage = function (req, res, next) {
+    res.render('admin/addUser', {
+        user: req.user.dataValues,
+        form_data: {},
+        errors: {}
+    });
+}
+
+exports.addUser = function (req, res, next) {
+    let isAdmin;
+    if (req.body.isAdmin === 'on')
+        isAdmin = 1;
+    else
+        isAdmin = 0;
+    models.User.create({
+        username: req.body.username,
+        password: hashGenerator(req.body.username),
+        email: req.body.email,
+        name: req.body.name,
+        lastname: req.body.lastname,
+        isAdmin: isAdmin
+    }).then(function () {
+        res.redirect('/users')
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
+exports.aracTakipMenu = function (req, res, next) {
+    res.render('admin/aracTakipMenu', {
+        user: req.user.dataValues
+    });
+}
+
+exports.vehicleList = function (req, res, next) {
+    return models.Vehicle.findAll().then(vehicles => {
+        res.render('admin/vehicleList', {
+            user: req.user.dataValues,
+            vehicles: vehicles
+        });
+    })
+}
+
+exports.addVehiclePage = function (req, res, next) {
+    res.render('admin/addVehicle', {
+        user: req.user.dataValues,
+        form_data: {},
+        errors: {}
+    });
+}
+exports.addVehicle = function (req, res, next) {
+    models.Vehicle.create({
+        alias: "Lodos-" + parseInt(Math.random() * 100),
+        macAddress: req.body.macAddress,
+        color: req.body.colorId
+    }).then(result => {
+        console.log("=====> " + result.dataValues.vehicleId);
+        models.Sensor.bulkCreate([{
+                sensorName: "gps",
+                vehicleId: result.dataValues.vehicleId
+            },
+            {
+                sensorName: "hiz",
+                vehicleId: result.dataValues.vehicleId
+            },
+            {
+                sensorName: "sarj",
+                vehicleId: result.dataValues.vehicleId
+            },
+            {
+                sensorName: "sicaklik",
+                vehicleId: result.dataValues.vehicleId
+            },
+            {
+                sensorName: "akim",
+                vehicleId: result.dataValues.vehicleId
+            }
+        ]).then(
+            res.redirect('/vehicles')
+        ).catch(err => {
+            console.log("err0= " + err);
+        })
+    })
 }
 
 exports.singupPage = function (req, res, next) {
-    res.render('user/signup', {
+    res.render('admin/signup', {
         form_data: {},
-        errors: {}
+        errors: {},
+        user: req.user.dataValues
     });
 }
 

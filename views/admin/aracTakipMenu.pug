@@ -1,0 +1,20 @@
+doctype html
+html(lang='en')
+  include ../common/header.pug
+  +head("Lodos E2")
+  header
+    include ../common/navbar.pug
+    +navbar(user)
+  sidebar
+    include ../common/sidebar.pug
+    +sidebar(user)
+  body.bg-secondary
+    .container
+
+
+    include ../common/footer.pug
+    +footer()
+    script(src="/javascripts/adminPage.js" type="text/javascript")
+
+
+    

@@ -1,0 +1,71 @@
+mixin sidebar(user)
+    aside.accordion.sidebar(id="sidebar")
+        #leftside-navigation.nano
+            ul.nano-content
+                if user.isAdmin
+                    li
+                        a(href='/')
+                            i.fa.fa-dashboard
+                            span Admin Menü
+                    li.sub-menu
+                        a(href='javascript:void(0);')
+                            i.fa.fa-user
+                            span Kullanıcılar
+                            i.arrow.fa.fa-angle-right.pull-right
+                        ul
+                            li
+                                a(href='/addUser/')
+                                    i.fa.fa-plus
+                                    span Yeni Kullanıcı Ekle
+                            li
+                                a(href='/users/')
+                                    i.fa.fa-list
+                                    span Kayıtlı Kullanıcıları Listele
+
+                    li.sub-menu
+                        a(href='javascript:void(0);')
+                            i.fa.fa-car
+                            span Araçlar
+                            i.arrow.fa.fa-angle-right.pull-right
+                        ul
+                            li  
+                                a(href='/aracTakipMenu/')
+                                    i.fa.fa-eye
+                                    span Araç Takip
+                            li
+                                a(href='/addVehicle/')
+                                    i.fa.fa-plus
+                                    span Yeni Araç Ekle
+                            li
+                                a(href='/vehicles/')
+                                    i.fa.fa-list
+                                    span Kayıtlı Araçları Listele
+                else
+                    li
+                        a(href='index.html')
+                            i.fa.fa-dashboard
+                            span Bilgilerim
+                li
+                    a(href='/logout')
+                        i.fa.fa-sign-out
+                        span Çıkış
+
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"  crossorigin="anonymous")
+    script(type="text/javascript").
+        document.getElementById("sidebar").style.width = "0";
+        $("#leftside-navigation .sub-menu > a").click(function(e) {
+            $("#leftside-navigation ul ul").slideUp(), $(this).next().is(":visible") || $(this).next().slideDown(),
+            e.stopPropagation()
+        });
+        function toggleNav() {
+            if ($("#sidebar").width()==0)
+                document.getElementById("sidebar").style.width = "250px"; 
+            else 
+                document.getElementById("sidebar").style.width = "0px";
+        }
+        $(document).mouseup(e => {
+            if (! $('#sidebar').is(e.target) &&  $('#sidebar').has(e.target).length === 0 )
+            {
+                document.getElementById("sidebar").style.width = "0px"; 
+            }
+        });

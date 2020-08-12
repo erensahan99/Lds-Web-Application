@@ -1,0 +1,40 @@
+doctype html
+html(lang='en')
+  include ../common/header.pug
+  +head("Lodos E2")
+  header
+    include ../common/navbar.pug
+    +navbar(user)
+  sidebar
+    include ../common/sidebar.pug
+    +sidebar(user)
+  body.bg-secondary
+    .container
+        table.mt-5.table.table-dark.table-hover(border='1')
+            thead
+                tr
+                td Marka
+                td Model
+                td Model Yıl
+                td Stok
+            tbody
+                for user in users
+                    tr
+                    td #{user.username}
+                    td #{user.name}
+                    td #{user.lastname}
+                    td #{user.email}
+                    if user.isAdmin
+                        td(style='width:5%;')
+                            a.btn.btn-success(href="{{url_for('arac_kirala',id=row[0])}}", role='button')
+                    else
+                        td(style='width:5%;')
+                            a.btn.btn-danger(href="{{url_for('arac_listele',error=1)}}", role='button')
+
+
+    include ../common/footer.pug
+    +footer()
+    script(src="/javascripts/adminPage.js" type="text/javascript")
+
+
+    

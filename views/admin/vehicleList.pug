@@ -1,0 +1,32 @@
+doctype html
+html(lang='en')
+  include ../common/header.pug
+  +head("Lodos E2")
+  header
+    include ../common/navbar.pug
+    +navbar(user)
+  sidebar
+    include ../common/sidebar.pug
+    +sidebar(user)
+  body.bg-secondary
+    .container
+        table.mt-5.table.table-dark.table-hover(border='1')
+            thead
+                tr
+                td Takma Adı
+                td MAC Adresi
+                td Renk
+            tbody
+                for vehicle in vehicles
+                    tr
+                    td #{vehicle.alias}
+                    td #{vehicle.macAddress}
+                    td #{vehicle.color}
+
+
+    include ../common/footer.pug
+    +footer()
+    script(src="/javascripts/adminPage.js" type="text/javascript")
+
+
+    
