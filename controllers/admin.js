@@ -76,38 +76,39 @@ exports.addVehiclePage = function (req, res, next) {
     });
 }
 exports.addVehicle = function (req, res, next) {
-    models.Vehicle.create({
-        alias: "Lodos-" + parseInt(Math.random() * 100),
-        macAddress: req.body.macAddress,
-        color: req.body.colorId
-    }).then(result => {
-        console.log("=====> " + result.dataValues.vehicleId);
-        models.Sensor.bulkCreate([{
-                sensorName: "gps",
-                vehicleId: result.dataValues.vehicleId
-            },
-            {
-                sensorName: "hiz",
-                vehicleId: result.dataValues.vehicleId
-            },
-            {
-                sensorName: "sarj",
-                vehicleId: result.dataValues.vehicleId
-            },
-            {
-                sensorName: "sicaklik",
-                vehicleId: result.dataValues.vehicleId
-            },
-            {
-                sensorName: "akim",
-                vehicleId: result.dataValues.vehicleId
-            }
-        ]).then(
-            res.redirect('/vehicles')
-        ).catch(err => {
-            console.log("err0= " + err);
-        })
-    })
+models.Vehicle.create({
+    macAddress: req.body.macAddress,
+    alias: "Lodos-" + parseInt(Math.random() * 100),
+    color: req.body.colorId
+}).then(result => {
+    res.redirect('/vehicles')
+    //console.log("=====> " + result.dataValues.vehicleId);
+    /*
+    models.Sensor.bulkCreate([{
+            sensorName: "gps",
+            vehicleId: result.dataValues.vehicleId
+        },
+        {
+            sensorName: "hiz",
+            vehicleId: result.dataValues.vehicleId
+        },
+        {
+            sensorName: "sarj",
+            vehicleId: result.dataValues.vehicleId
+        },
+        {
+            sensorName: "sicaklik",
+            vehicleId: result.dataValues.vehicleId
+        },
+        {
+            sensorName: "akim",
+            vehicleId: result.dataValues.vehicleId
+        }
+    ])
+    */
+}).catch(err => {
+    console.log("err0= " + err);
+})
 }
 
 exports.singupPage = function (req, res, next) {

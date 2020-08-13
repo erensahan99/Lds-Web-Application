@@ -8,6 +8,10 @@ var debug = require('debug')('lodos-web-applicationx:server');
 var http = require('http');
 let models = require('../models')
 
+var mqtt = require('mqtt');
+const uuid = require('uuid');
+
+
 const {
   settings
 } = require('../app');
@@ -85,6 +89,10 @@ function onError(error) {
   }
 }
 
+
+
+
+
 /**
  * Event listener for HTTP server "listening" event.
  */
@@ -95,4 +103,98 @@ function onListening() {
     'pipe ' + addr :
     'port ' + addr.port;
   debug('Listening on ' + bind);
+
+
+  //MQTT Server Connection
+  var options = {
+    port: process.env.port,
+    host: process.env.host,
+    clientId: process.env.clientId,
+    username: process.env.username,
+    password: process.env.password,
+    keepalive: 60,
+    rejectUnauthorized: true
+  };
+
+  var client = mqtt.connect(process.env.host, options);
+  client.on('connect', function () {
+    console.log('connected to broker');
+    let datas = []
+    let array = []
+
+    setInterval(function () {
+      let vehicles = [];
+      if (datas.length != 0) {
+       /*  console.log("data insterting") */
+        models.Vehicle.findAll({
+          raw: true,
+          attributes: ['macAddress']
+        }).then(result => {
+          let veh= []
+
+          result.forEach( res => {
+            vehicles.push(Object.values(res)[0])
+          });
+
+          datas.forEach(function (data) {
+            if (vehicles.includes(data.macAddress)) {
+              array.push({
+                'macAddress': data.macAddress,
+                'dataName': 'gps',
+                'data': data.gps,
+                'time': data.time
+              }, {
+                'macAddress': data.macAddress,
+                'dataName': 'hiz',
+                'data': data.hiz,
+                'time': data.time
+              }, {
+                'macAddress': data.macAddress,
+                'dataName': 'sarj',
+                'data': data.sarj,
+                'time': data.time
+              }, {
+                'macAddress': data.macAddress,
+                'dataName': 'sicaklik',
+                'data': data.sicaklik,
+                'time': data.time
+              }, {
+                'macAddress': data.macAddress,
+                'dataName': 'akim',
+                'data': data.akim,
+                'time': data.time
+              });
+            } else {
+              console.log("Error: Unregistered vehicle data. MAC: " + data.macAddress + " Time: " + data.time)
+            }
+          });
+          models.Data.bulkCreate(array).then(function () {
+            datas.length = 0;
+            array.length = 0;
+          }).catch(err => {
+            console.log("error => " + err);
+          })
+        });
+      } /* else {
+        console.log("empty datas");
+      } */
+    }, 30000);
+
+    client.subscribe('#', function () {
+      // when a message arrives, do something with it
+      client.on('message', function (topic, message, packet) {
+        try {
+          let incoming_object = JSON.parse(message.toString());
+          datas.push(incoming_object);
+          //console.log(incoming_object);
+        } catch (e) {
+          console.log('Error parsing JSON message: ' + e);
+        }
+      });
+    });
+  });
+
+  client.on('error', function (err) {
+    console.log(err);
+  });
 }

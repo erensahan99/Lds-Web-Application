@@ -1,4 +1,3 @@
-var mqtt = require('mqtt');
 require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
@@ -11,7 +10,6 @@ var session = require('express-session');
 let flash = require('connect-flash')
 
 var indexRouter = require('./routes/index');
-
 require('./passport_setup')(passport)
 
 var app = express();
@@ -38,7 +36,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
@@ -58,34 +55,3 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
-
-//MQTT Server Connection
-var options = {
-    port: process.env.port,
-    host: process.env.host,
-    clientId: process.env.clientId,
-    username: process.env.username,
-    password: process.env.password,
-    keepalive: 60,
-    rejectUnauthorized: true
-};
-
-var client = mqtt.connect(process.env.host, options);
-client.on('connect', function () {
-    console.log('connected');
-    // subscribe to a topic
-    client.subscribe('abc', function () {
-        // when a message arrives, do something with it
-        client.on('message', function (topic, message, packet) {
-
-            console.log("Message received on'" + topic + "': " + message);
-        });
-
-
-
-    });
-});
-
-client.on('error', function (err) {
-    console.log(err);
-});
