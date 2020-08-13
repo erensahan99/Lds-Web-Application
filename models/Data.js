@@ -7,13 +7,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    sensorId: {
+    macAddress: {
       allowNull: false,
       type: DataTypes.UUID,
       references: {
-        model: 'Sensors',
-        key: 'sensorId'
+        model: 'Vehicles',
+        key: 'macAddress'
       }
+    },
+    dataName: {
+      allowNull: false,
+      type: DataTypes.STRING
     },
     data: {
       allowNull: false,
@@ -23,11 +27,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: 'TIMESTAMP'
     }
+  }, {
+    timestamps: false,
   })
 
   Data.associate = models => {
-    Data.hasOne(models.Sensor, {
-      foreignKey: 'sensorId',
+    Data.hasOne(models.Vehicle, {
+      foreignKey: 'macAddress',
       constraints: false
     });
   }

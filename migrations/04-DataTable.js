@@ -1,36 +1,38 @@
 'use strict';
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('Sensors', {
-            sensorId: {
+        return queryInterface.createTable('Data', {
+            dataId: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4
             },
-            vehicleId: {
+            macAddress: {
                 allowNull: false,
-                type: Sequelize.UUID,
+                type: Sequelize.STRING,
                 references: {
                     model: 'Vehicles',
-                    key: 'vehicleId'
+                    key: 'macAddress'
                 }
             },
-            sensorName: {
+            dataName: {
                 allowNull: false,
                 type: Sequelize.STRING
             },
-            createdAt: {
+            data: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.STRING
             },
-            updatedAt: {
+            time: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: 'TIMESTAMP'
             }
+        }, {
+            timestamps: false,
         });
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('Sensors');
+        return queryInterface.dropTable('Data');
     }
 };

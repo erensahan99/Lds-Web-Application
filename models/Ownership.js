@@ -1,14 +1,13 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Ownership = sequelize.define('Ownership', {
-    vechileId: {
+    macAddress: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.STRING,
       references: {
         model: 'Vehicles',
-        key: 'vehicleId'
+        key: 'macAddress'
       }
     },
     userId: {
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Ownership.associate = models => {
     Ownership.hasOne(models.Vehicle, {
-      foreignKey: 'vehicleId',
+      foreignKey: 'macAddress',
       constraints: false
     });
   }

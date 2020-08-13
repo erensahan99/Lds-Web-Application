@@ -2,13 +2,13 @@
 module.exports = {
     up:(queryInterface,Sequelize) => {
         return queryInterface.createTable('Ownerships',{
-            vechileId: {
+            macAddress: {
               allowNull: false,
               primaryKey: true,
-              type: Sequelize.UUID,
+              type: Sequelize.STRING,
               references: {
                   model: 'Vehicles',
-                  key: 'vehicleId'
+                  key: 'macAddress'
               }
             },
             userId: {

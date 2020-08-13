@@ -2,20 +2,14 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface.createTable('Vehicles', {
-            vehicleId: {
+            macAddress: {
                 allowNull: false,
                 primaryKey: true,
-                type: Sequelize.UUID,
-                defaultValue: Sequelize.UUIDV4
+                type: Sequelize.STRING,
             },
             alias: {
                 allowNull: false,
                 type: Sequelize.STRING
-            },
-            macAddress: {
-                type: Sequelize.STRING,
-                allowNull: true,
-                unique: true
             },
             color: {
                 allowNull: false,

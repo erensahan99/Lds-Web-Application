@@ -1,20 +1,14 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Vehicle = sequelize.define('Vehicle', {
-    vehicleId: {
+    macAddress: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+      type: DataTypes.STRING
     },
     alias: {
       allowNull: false,
       type: DataTypes.STRING
-    },
-    macAddress: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true
     },
     color: {
       allowNull: false,
