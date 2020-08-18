@@ -1,3 +1,4 @@
+var path = require('path');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const myPassword = require('../passport_setup')(passport);
@@ -11,7 +12,8 @@ const hashGenerator = function (password) {
 
 
 exports.adminPage = function (req, res, next) {
-    res.render('admin/adminPage', {
+
+    res.render('admin/adminPage',{
         user: req.user.dataValues
     });
 }
@@ -82,30 +84,6 @@ models.Vehicle.create({
     color: req.body.colorId
 }).then(result => {
     res.redirect('/vehicles')
-    //console.log("=====> " + result.dataValues.vehicleId);
-    /*
-    models.Sensor.bulkCreate([{
-            sensorName: "gps",
-            vehicleId: result.dataValues.vehicleId
-        },
-        {
-            sensorName: "hiz",
-            vehicleId: result.dataValues.vehicleId
-        },
-        {
-            sensorName: "sarj",
-            vehicleId: result.dataValues.vehicleId
-        },
-        {
-            sensorName: "sicaklik",
-            vehicleId: result.dataValues.vehicleId
-        },
-        {
-            sensorName: "akim",
-            vehicleId: result.dataValues.vehicleId
-        }
-    ])
-    */
 }).catch(err => {
     console.log("err0= " + err);
 })

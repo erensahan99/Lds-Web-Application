@@ -1,5 +1,6 @@
 doctype html
 html(lang='en')
+  link(rel="stylesheet" href="/stylesheets/userMenu.css")
   include ../common/header.pug
   +head("Lodos E2")
   header
@@ -9,32 +10,110 @@ html(lang='en')
     include ../common/sidebar.pug
     +sidebar(user)
   body.bg-secondary
-    .container
-      form#connection-information-form
-        b Hostname or IP Address:
-        input#host(type="text" name="host" value="postman.cloudmqtt.com")
-        br
-        b Port:
-        input#port(type="text" name="port" value="33787")
-        br
-        b Username:
-        input#username(type="text" name="username" value="")
-        br
-        b Password:
-        input#password(type="password" name="password" value="")
-        br
-        b Topic:
-        input#topic(type="text" name="topic" value="abc")
-        br
-        br
-        h1(id="data") Data: No Data
-        div.text-center
-          input.btn.btn-dark(type="button" onclick="startConnect()" value="Connect")
-          input.ml-3.btn.btn-dark(type="button" onclick="startDisconnect()" value="Disconnect")
-      #messages
+    input#host(type="text" hidden=true name="host" value=process.env.clientHost)
+    input#port(type="text" hidden=true name="port" value=process.env.clientPort)
+    input#username(type="text" hidden=true name="username" value=process.env.clientUsername)
+    input#password(type="password" hidden=true name="password" value=process.env.clientPassword)
+    input#topic(type="text" name="topic" hidden=true value="abc")
+    section#contents.container
+      section.statistics
+        .container-fluid
+          .row.text-center
+            .col-md-4
+              .box.rounded-left
+                .table
+                  .table-cell
+                    #mainx
+                      #screenx
+                        #sicaklik
+                          img(src='http://i1204.photobucket.com/albums/bb409/david_barukcic/temperature_icon_zpssyam3lm5.png')
+                          h2
+                            | BATARYA
+                            br
+                            | SICAKLIK
+                          h3
+                            .row
+                              .col-md-1
+                              .col-md-2
+                                p#sicaklik1Text 0
+                              .col-md-2
+                                span.small 	℃
+                              .col-md-1
+                              .col-md-2
+                                p#sicaklik2Text 0
+                              .col-md-2
+                                span.small 	℃
+                              .col-md-1
+                            .row
+                              .col-md-1
+                              .col-md-2
+                                p#sicaklik3Text 0
+                              .col-md-2
+                                span.small 	℃
+                              .col-md-1
+                              .col-md-2
+                                p#sicaklik4Text 0
+                              .col-md-2
+                                span.small 	℃
+                              .col-md-1
+                            
+            .col-md-4
+              .box
+                .table
+                  .table-cell
+                    #main
+                      #screen
+                        #hiz
+                          #radial
+                            #empty
+                          h1#hizText 0
+                          #mph KM/H
+                          #sarjText 15%
+                          #icon
+                            img(src='http://i1204.photobucket.com/albums/bb409/david_barukcic/battery_icon_zpst5bk33aq.png')
+
+            .col-md-4
+              .box.rounded-right
+                .table
+                  .table-cell
+                    #mainx
+                      #screenx
+                        #akim
+                          // img(src='http://i1204.photobucket.com/albums/bb409/david_barukcic/engine_icon_zpsnvg1y3qj.png')
+                          h2 AKIM
+                          h1#akimText 0 A
+                        
+                          
+      section.charts
+        .container-fluid
+          .row
+            .col-md-6
+              .chart-container.rounded
+                h3 Chart
+                canvas#myChart
+            .col-md-6
+              .chart-container.rounded
+                h3 Chart2
+                canvas#myChart2
+     
+     
+      section.chrt3.mt-5
+        #map
+      
+      
+
 
     include ../common/footer.pug
     +footer()
+    
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0" type="text/javascript")
+    
+    link(rel='stylesheet', href='/stylesheets/jquery-jvectormap-2.0.1.css', type='text/css', media='screen')
+    script(src='http://code.jquery.com/jquery-1.11.1.min.js')
+    script(src='/javascripts/jquery-jvectormap-2.0.1.min.js')
+    script(src='/javascripts/jquery-jvectormap-data-turkey-tr-en.js')
+    
+    script(src="/javascripts/userPage.js" type="text/javascript")
+
     script(src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript")
-    script(src="http://code.jquery.com/jquery-1.10.1.min.js" type="text/javascript")
     script(src="/javascripts/app.js" type="text/javascript")

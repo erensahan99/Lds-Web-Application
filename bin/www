@@ -125,14 +125,14 @@ function onListening() {
     setInterval(function () {
       let vehicles = [];
       if (datas.length != 0) {
-       /*  console.log("data insterting") */
+        /*  console.log("data insterting") */
         models.Vehicle.findAll({
           raw: true,
           attributes: ['macAddress']
         }).then(result => {
-          let veh= []
+          let veh = []
 
-          result.forEach( res => {
+          result.forEach(res => {
             vehicles.push(Object.values(res)[0])
           });
 
@@ -155,8 +155,23 @@ function onListening() {
                 'time': data.time
               }, {
                 'macAddress': data.macAddress,
-                'dataName': 'sicaklik',
-                'data': data.sicaklik,
+                'dataName': 'sicaklik1',
+                'data': data.sicaklik1,
+                'time': data.time
+              }, {
+                'macAddress': data.macAddress,
+                'dataName': 'sicaklik2',
+                'data': data.sicaklik2,
+                'time': data.time
+              }, {
+                'macAddress': data.macAddress,
+                'dataName': 'sicaklik3',
+                'data': data.sicaklik3,
+                'time': data.time
+              }, {
+                'macAddress': data.macAddress,
+                'dataName': 'sicaklik4',
+                'data': data.sicaklik4,
                 'time': data.time
               }, {
                 'macAddress': data.macAddress,
@@ -168,16 +183,20 @@ function onListening() {
               console.log("Error: Unregistered vehicle data. MAC: " + data.macAddress + " Time: " + data.time)
             }
           });
+          var total = datas.length;
           models.Data.bulkCreate(array).then(function () {
             datas.length = 0;
             array.length = 0;
+            console.log("Total Data: " + total);
+
           }).catch(err => {
             console.log("error => " + err);
           })
         });
-      } /* else {
-        console.log("empty datas");
-      } */
+      }
+      /* else {
+             console.log("empty datas");
+           } */
     }, 30000);
 
     client.subscribe('#', function () {

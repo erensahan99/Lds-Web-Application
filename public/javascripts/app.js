@@ -1,3 +1,7 @@
+$(document).ready(function(){
+    //$("#connection").submit();
+});
+
 // Called after form input is processed
 function startConnect() {
     // Generate a random client ID
@@ -9,9 +13,16 @@ function startConnect() {
     username = document.getElementById("username").value;
     password = document.getElementById("password").value;
 
-    // Print output for the user in the messages div
-    document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
-    document.getElementById("messages").innerHTML += '<span>Using the following client value: ' + clientID + '</span><br/>';
+    /* 
+    host = process.env.host
+    prot = process.env.wsPort
+    username = process.env.username
+    password = process.env.password
+     */
+    
+     // Print output for the user in the messages div
+    //document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
+    //document.getElementById("messages").innerHTML += '<span>Using the following client value: ' + clientID + '</span><br/>';
 
     // Initialize new Paho client connection
     client = new Paho.MQTT.Client(host, Number(port), clientID);
@@ -19,6 +30,7 @@ function startConnect() {
     // Set callback handlers
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
+    client.onConnectionLost = onConnectionLost;
 
     // Connect the client, if successful, call onConnect function
     client.connect({ 
@@ -36,7 +48,7 @@ function onConnect() {
     topic = document.getElementById("topic").value;
 
     // Print output for the user in the messages div
-    document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic + '</span><br/>';
+    // document.getElementById("messages").innerHTML += '<span>Subscribing to: ' + topic + '</span><br/>';
 
     // Subscribe to the requested topic
     client.subscribe(topic);
@@ -52,7 +64,14 @@ function onConnectionLost(responseObject) {
 
 // Called when a message arrives
 function onMessageArrived(message) {
-    $('#data').text("Data: " + message.payloadString);
+    var data = JSON.parse(message.payloadString);
+    $('#hizText').text(data.hiz);
+    $('#sarjText').text(data.sarj + "%");
+    $('#akimText').text(data.akim+" A");
+    $('#sicaklik1Text').text(data.sicaklik1);
+    $('#sicaklik2Text').text(data.sicaklik2);
+    $('#sicaklik3Text').text(data.sicaklik3);
+    $('#sicaklik4Text').text(data.sicaklik4);
     console.log("onMessageArrived: " + message.payloadString);
     // document.getElementById("messages").innerHTML += '<span>Topic: ' + message.destinationName + '  | ' + message.payloadString + '</span><br/>';
 }
@@ -62,3 +81,5 @@ function startDisconnect() {
     client.disconnect();
     document.getElementById("messages").innerHTML += '<span>Disconnected</span><br/>';
 }
+
+startConnect();

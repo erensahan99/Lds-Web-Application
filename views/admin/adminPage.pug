@@ -1,20 +1,132 @@
 doctype html
 html(lang='en')
+  link(rel="stylesheet" href="/stylesheets/adminMenu.css")
   include ../common/header.pug
   +head("Lodos E2")
   header
+
     include ../common/navbar.pug
     +navbar(user)
   sidebar
     include ../common/sidebar.pug
     +sidebar(user)
   body.bg-secondary
-    .container
+    section#contents.container
+      .welcome
+        .container-fluid
+          .row
+            .col-md-12
+              .content
+                h2.text-center Admin Menüsü
+      section.statistics
+        .container-fluid
+          .row
+            .col-md-4
+              .box
+                i.fa.fa-car.fa-fw.bg-info
+                .info
+                  h3 Online Araç
+                    span.ml-2 7
+                  p Toplam Kayıtlı Araç:
+                    span.ml-2 10
+            .col-md-4
+              .box
+                i.fa.fa-users.fa-fw.bg-warning
+                .info
+                  h3 Aktif Kullanıcı
+                    span.ml-2 3
+                  p Toplam Kullanıcı:
+                    span.ml-2 10
+            .col-md-4
+              .box
+                i.fa.fa-eye.fa-fw.bg-secondary
+                .info
+                  h3 Aktif Admin
+                    span.ml-2 1
+                  p Toplam Admin:
+                    span.ml-2 2
+      section.charts
+        .container-fluid
+          .row
+            .col-md-6
+              .chart-container
+                h3 Chart
+                canvas#myChart
+            .col-md-6
+              .chart-container
+                h3 Chart2
+                canvas#myChart2
+      section.statis.text-center
+        .container-fluid
+          .row
+            .col-md-3
+              .box.bg-primary
+                i.fa.fa-eye
+                h3 5,154
+                p.lead Page views
+            .col-md-3
+              .box.danger
+                i.fa.fa-user-o
+                h3 245
+                p.lead User registered
+            .col-md-3
+              .box.warning
+                i.fa.fa-shopping-cart
+                h3 5,154
+                p.lead Product sales
+            .col-md-3
+              .box.success
+                i.fa.fa-handshake-o
+                h3 5,154
+                p.lead Transactions
+      section.chrt3.mt-5
+        #map
+      section.admins
+        .container-fluid
+          .row
+            .col-md-6
+              .box
+                h3 Admins:
+                .admin
+                  .info
+                    h3 Joge Lucky
+                    p Lorem ipsum dolor sit amet.
+                .admin
+                  .info
+                    h3 Joge Lucky
+                    p Lorem ipsum dolor sit amet.
+                .admin
+                  .info
+                    h3 Joge Lucky
+                    p Lorem ipsum dolor sit amet.
+            .col-md-6
+              .box
+                h3 Moderators:
+                .admin
+                  .info
+                    h3 Joge Lucky
+                    p Lorem ipsum dolor sit amet.
+                .admin
+                  .info
+                    h3 Joge Lucky
+                    p Lorem ipsum dolor sit amet.
+                .admin
+                  .info
+                    h3 Joge Lucky
+                    p Lorem ipsum dolor sit amet.
+      
 
 
     include ../common/footer.pug
     +footer()
+    
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0" type="text/javascript")
+    
+    link(rel='stylesheet', href='/stylesheets/jquery-jvectormap-2.0.1.css', type='text/css', media='screen')
+    script(src='http://code.jquery.com/jquery-1.11.1.min.js')
+    script(src='/javascripts/jquery-jvectormap-2.0.1.min.js')
+    script(src='/javascripts/jquery-jvectormap-data-turkey-tr-en.js')
+    
     script(src="/javascripts/adminPage.js" type="text/javascript")
-
 
     
