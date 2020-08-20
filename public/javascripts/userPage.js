@@ -111,7 +111,7 @@ $(function () {
         scale: 1
     });
 
-    window.addEventListener('resize', () => {
+    /* window.addEventListener('resize', () => {
         jsvmap.updateSize()
-    })
+    }) */
 })
