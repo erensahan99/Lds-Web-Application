@@ -67,10 +67,12 @@
 
   /* End statistics */
 
+  
+
   /* Start charts */
   .charts {
     margin-top: 25px;
-    color: #BBB
+    color: #BBB;
   }
 
   .charts .chart-container {
@@ -83,51 +85,8 @@
     font-size: 17px;
   }
 
-  /* Start users */
 
-  .admins {
-    margin-top: 25px;
-  }
-
-  .admins .box>h3 {
-    color: #ccc;
-    font-family: Calibri;
-    font-weight: 300;
-    margin-top: 0;
-  }
-
-  .admins .box .admin {
-    margin-bottom: 20px;
-    overflow: hidden;
-    background-color: #343a40;
-    padding: 10px;
-  }
-
-  .admins .box .admin .img {
-    width: 20%;
-    margin-right: 5%;
-    float: left;
-  }
-
-  .admins .box .admin .img img {
-    border-radius: 50%;
-  }
-
-  .admins .box .info {
-    width: 75%;
-    color: #EEE;
-    float: left;
-  }
-
-  .admins .box .info h3 {
-    font-size: 19px
-  }
-
-  .admins .box .info p {
-    color: #BBB
-  }
-
-  /* End users */
+  
   /* Start statis */
 
   .statis {
@@ -168,6 +127,11 @@
   }
 
   /*chart*/
+
+  .chart2{
+    height: 400px !important;
+  }
+
   .chrt3 {
     padding-bottom: 50px;
   }
@@ -240,14 +204,14 @@
   }
 
   #map svg g {
-    height: 100%;
-    width: 100%;
+    height: 400px;
+    width: 915px;
   }
 
   @media (max-width: 768px) {
     #map {
-      width: 450px;
-      height: 250px;
+      width: 700px;
+      height: 325px;
     }
   }
 
@@ -257,13 +221,6 @@
       height: 200px;
     }
   }
-
-
-
-
-
-
-
 
 
 
@@ -384,7 +341,7 @@
     opacity: 1;
     position: absolute;
     width: 100%;
-    top:130px;
+    top:125px;
     bottom: 70px;
     text-align: center;
     font-size: 52px;
@@ -396,29 +353,27 @@
   #hiz #sarjText,
   #hiz h2 {
     width: 100%;
-    font-size: 29px;
+    font-size: 25px;
     opacity: 1;
     letter-spacing: 0.25px;
     position: absolute;
-    top: 225px;
+    top: 200px;
+    z-index: 100;
     text-transform: uppercase;
-    color: #90fd90;
-    font-weight: 200;
+    color: white;
+    font-weight: bolder;
     text-align: center;
   }
 
-  #hiz #icon img {
+  #hiz  i{
     width: 55px;
-
+    height: 55px;
     opacity: 1;
-    letter-spacing: 0.25px;
     position: absolute;
-    top: 265px;
-    left: 142px;
+    top: 185px;
+    left: 137px;
+    color: red;
     text-transform: uppercase;
-    color: #ab2424;
-    font-weight: bold;
-    text-align: center;
   }
 
   #main.pressed,
@@ -439,6 +394,7 @@
     transition: transform 0.1s;
     transition: transform 0.1s, -webkit-transform 0.1s;
     border-radius: 360px;
+    z-index: 1;
     background: -webkit-linear-gradient(285deg, #96181e 0%, #4d0307 100%);
     background: linear-gradient(165deg, #96181e 0%, #4d0307 100%);
     margin: 0 auto;

@@ -1,0 +1,32 @@
+doctype html
+html(lang='en')
+  link(rel="stylesheet" href="/stylesheets/userMenu.css")
+  include ../common/header.pug
+  +head("Lodos E2")
+  header
+    include ../common/navbar.pug
+    +navbar(user)
+  sidebar
+    include ../common/sidebar.pug
+    +sidebar(user)
+  body.bg-secondary
+    section#contents.container
+    
+      
+      
+
+
+    include ../common/footer.pug
+    +footer()
+    
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0" type="text/javascript")
+    
+    link(rel='stylesheet', href='/stylesheets/jquery-jvectormap-2.0.1.css', type='text/css', media='screen')
+    script(src='http://code.jquery.com/jquery-1.11.1.min.js')
+    script(src='/javascripts/jquery-jvectormap-2.0.1.min.js')
+    script(src='/javascripts/jquery-jvectormap-data-turkey-tr-en.js')
+    
+    script(src="/javascripts/userPage.js" type="text/javascript")
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript")
+    script(src="/javascripts/app.js" type="text/javascript")

@@ -5,18 +5,21 @@ let user = require('../controllers/user')
 let admin = require('../controllers/admin')
 let {
     isLoggedin,
+    isLoggedin2,
     isAdmin,
     admin_userRouter
 } = require('../middleware/hasAuth.js')
 
 
 /* GET home page. */
-router.get('/', isLoggedin, admin_userRouter, admin.adminPage);
+router.get('/', isLoggedin, admin_userRouter, user.mainPage);
 
-router.get('/login', isLoggedin, user.loginPage);
+router.get('/userProfile', isLoggedin, user.userProfile);
+router.get('/login', isLoggedin2, user.loginPage);
 router.post('/login', user.login);
 router.get('/logout', user.logout);
 
+router.get('/adminMenu', isLoggedin, isAdmin, admin.adminPage);
 router.get('/users', isAdmin, admin.userList);
 router.get('/addUser', isAdmin, admin.addUserPage);
 router.post('/addUser', isAdmin, admin.addUser);
