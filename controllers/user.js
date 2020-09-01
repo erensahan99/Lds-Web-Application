@@ -1,20 +1,23 @@
 const passport = require('passport');
 const myPassword = require('../passport_setup')(passport);
 
-const { Op } = require("sequelize");
+const { Op, MACADDR } = require("sequelize");
 const models = require('../models');
 
 exports.mainPage = function (req, res, next) {
     return models.Data.findAll({
         where: {
-           [Op.or]: [{dataName : 'sicaklik1'},{dataName : 'sicaklik2'},{dataName : 'sicaklik3'},{dataName : 'sicaklik4'}]
+           [Op.or]: [{dataName : 'sicaklik1'},{dataName : 'sicaklik2'},{dataName : 'sicaklik3'},{dataName : 'sicaklik4'}],
+           [Op.and]: [{macAddress: req.user.macAddress}]
+
         },
-        order: ['time'],
-        limit:400
+        order: [['time', 'DESC']],
+        limit:100
     }).then(data => {
         res.render('user/index', {
-            user: req.user.dataValues,
-            data: data
+            user: req.user.dataValues,  
+            data: data,
+            macAddress: req.user.macAddress
         });
     }).catch(err => {
         console.log("err0= " + err);

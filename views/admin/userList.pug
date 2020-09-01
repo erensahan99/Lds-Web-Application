@@ -10,26 +10,48 @@ html(lang='en')
     +sidebar(user)
   body.bg-secondary
     .container
-        table.mt-5.table.table-dark.table-hover(border='1')
-            thead
-                tr
-                td Marka
-                td Model
-                td Model Yıl
-                td Stok
+        table.mt-5.table.table-dark.table-hover(border='1').rounded.form-control-lg
+          form(action='/changeOwnership',method='post')
+            thead.text-center.font-weight-bold
+              tr
+                td
+                td Kullanıcı Adı
+                td Ad
+                td Soyad
+                td Email
+                td Araç
             tbody
-                for user in users
-                    tr
-                    td #{user.username}
-                    td #{user.name}
-                    td #{user.lastname}
-                    td #{user.email}
-                    if user.isAdmin
-                        td(style='width:5%;')
-                            a.btn.btn-success(href="{{url_for('arac_kirala',id=row[0])}}", role='button')
-                    else
-                        td(style='width:5%;')
-                            a.btn.btn-danger(href="{{url_for('arac_listele',error=1)}}", role='button')
+              for user in users
+                tr
+                  if user.isAdmin
+                      td
+                          a.btn.btn-primary(href="#", role='button', style='width:20px; height:20px;').rounded-circle
+                  else
+                      td
+                          a.btn.btn-info(href="#", role='button', style='width:20px; height:20px;').rounded-circle
+                  td #{user.username}
+                  td #{user.name}
+                  td #{user.lastname}
+                  td #{user.email}
+                  td.text-center
+                    select#macAddresses(name='macAddresses', style='width: 250px;').btn-dark.form-control-lg
+                      option(value='') Araç Yok
+                      for vehicle in vehicles
+                        if user.macAddress == vehicle.macAddress
+                          option(value=user.userId + '_' + vehicle.macAddress, selected='') #{vehicle.macAddress}
+                        else
+                          option(value=user.userId + '_' + vehicle.macAddress) #{vehicle.macAddress}
+              tr
+                td.border-right-0.border-left-0
+                td.border-right-0.border-left-0
+                td.border-right-0.border-left-0
+                td.border-right-0.border-left-0
+                td.border-right-0.border-left-0
+                td.text-center.border-right-0.border-left-0
+                  input(type="submit", name="Kaydet").btn-secondary.rounded
+
+
+                      
 
 
     include ../common/footer.pug
@@ -37,4 +59,3 @@ html(lang='en')
     script(src="/javascripts/adminPage.js" type="text/javascript")
 
 
-    

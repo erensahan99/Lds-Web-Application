@@ -137,47 +137,47 @@ function onListening() {
           });
 
           datas.forEach(function (data) {
-            if (vehicles.includes(data.macAddress)) {
+            if (vehicles.includes(data[0])) {
               array.push({
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'gps',
-                'data': data.gps,
-                'time': data.time
+                'data': data[1].gps,
+                'time': data[1].time
               }, {
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'hiz',
-                'data': data.hiz,
-                'time': data.time
+                'data': data[1].hiz,
+                'time': data[1].time
               }, {
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'sarj',
-                'data': data.sarj,
-                'time': data.time
+                'data': data[1].sarj,
+                'time': data[1].time
               }, {
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'sicaklik1',
-                'data': data.sicaklik1,
-                'time': data.time
+                'data': data[1].sicaklik1,
+                'time': data[1].time
               }, {
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'sicaklik2',
-                'data': data.sicaklik2,
-                'time': data.time
+                'data': data[1].sicaklik2,
+                'time': data[1].time
               }, {
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'sicaklik3',
-                'data': data.sicaklik3,
-                'time': data.time
+                'data': data[1].sicaklik3,
+                'time': data[1].time
               }, {
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'sicaklik4',
-                'data': data.sicaklik4,
-                'time': data.time
+                'data': data[1].sicaklik4,
+                'time': data[1].time
               }, {
-                'macAddress': data.macAddress,
+                'macAddress': data[0],
                 'dataName': 'akim',
-                'data': data.akim,
-                'time': data.time
+                'data': data[1].akim,
+                'time': data[1].time
               });
             } else {
               console.log("Error: Unregistered vehicle data. MAC: " + data.macAddress + " Time: " + data.time)
@@ -204,7 +204,15 @@ function onListening() {
       client.on('message', function (topic, message, packet) {
         try {
           let incoming_object = JSON.parse(message.toString());
-          datas.push(incoming_object);
+          var date = new Date();
+          date = date.getUTCFullYear() + '-' +
+              ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+              ('00' + date.getUTCDate()).slice(-2) + ' ' + 
+              ('00' + date.getUTCHours()).slice(-2) + ':' + 
+              ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
+              ('00' + date.getUTCSeconds()).slice(-2);
+          incoming_object.time = date
+          datas.push([topic,incoming_object]);
           //console.log(incoming_object);
         } catch (e) {
           console.log('Error parsing JSON message: ' + e);

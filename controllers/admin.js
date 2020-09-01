@@ -4,6 +4,12 @@ const passport = require('passport');
 const myPassword = require('../passport_setup')(passport);
 
 const models = require('../models');
+const {
+    sequelize
+} = require('../models');
+const {
+    connect
+} = require('http2');
 
 
 const hashGenerator = function (password) {
@@ -13,17 +19,24 @@ const hashGenerator = function (password) {
 
 exports.adminPage = function (req, res, next) {
 
-    res.render('admin/adminPage',{
+    res.render('admin/adminPage', {
         user: req.user.dataValues
     });
 }
 
 exports.userList = function (req, res, next) {
-    return models.User.findAll().then(users => {
-        res.render('admin/userList', {
-            user: req.user.dataValues,
-            users: users
-        });
+    return models.Vehicle.findAll().then(vehicles => {
+        sequelize.query("SELECT U.userId, U.username, U.name, U.lastname, U.email, U.isAdmin, O.macAddress FROM Users U LEFT JOIN Ownerships O ON U.userId = O.userId ORDER BY U.userName, U.isAdmin", {
+            type: sequelize.QueryTypes.SELECT
+        }).then(users => {
+            res.render('admin/userList', {
+                user: req.user.dataValues,
+                users: users,
+                vehicles: vehicles
+            });
+        })
+    }).catch(err => {
+        console.log(err)
     })
 }
 
@@ -78,15 +91,52 @@ exports.addVehiclePage = function (req, res, next) {
     });
 }
 exports.addVehicle = function (req, res, next) {
-models.Vehicle.create({
-    macAddress: req.body.macAddress,
-    alias: "Lodos-" + parseInt(Math.random() * 100),
-    color: req.body.colorId
-}).then(result => {
-    res.redirect('/vehicles')
-}).catch(err => {
-    console.log("err0= " + err);
-})
+    models.Vehicle.create({
+        macAddress: req.body.macAddress,
+        alias: "Lodos-" + parseInt(Math.random() * 100),
+        color: req.body.colorId
+    }).then(result => {
+        res.redirect('/vehicles')
+    }).catch(err => {
+        console.log("err0= " + err);
+    })
+}
+
+exports.changeOwnership = function (req, res, next) {
+    req.body.macAddresses.forEach(macAddress => {
+        let values = macAddress.split("_");
+        if (values[1]) {
+
+            models.Ownership.findOne({
+                where: {
+                    userId: values[0]
+                }
+            }).then(result => {
+                if (result) {
+                    models.Ownership.update({
+                        macAddress: values[1]
+                    }, {
+                        where: [{
+                            userId: values[0]
+                        }]
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                } else {
+                    console.log(values)
+                    models.Ownership.create({
+                        macAddress: values[1],
+                        userId: values[0]
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    });
+    res.redirect('/users')
 }
 
 exports.singupPage = function (req, res, next) {

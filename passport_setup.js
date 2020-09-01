@@ -21,7 +21,21 @@ module.exports = function (passport) {
                 done(new Error('Böyle bir kullanıcı bulunmamaktadır.'))
             }
             delete user.dataValues.password; 
-            done(null, user);
+            if(!user.dataValues.isAdmin){
+                models.Ownership.findOne({
+                    where: {
+                        'userId': user.userId
+                    }
+                }).then(data => {
+                    user.macAddress= data.macAddress;
+                    done(null, user);                
+                }).catch(err => {
+                    console.log("err0= " + err);
+                })
+            }
+            else{
+                done(null, user);                
+            }
         })
     });
 

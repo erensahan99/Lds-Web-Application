@@ -27,6 +27,7 @@ router.get('/aracTakipMenu', isAdmin, admin.vehicleList);
 router.get('/vehicles', isAdmin, admin.vehicleList);
 router.get('/addVehicle', isAdmin, admin.addVehiclePage);
 router.post('/addVehicle', admin.addVehicle);
+router.post('/changeOwnership', isAdmin, admin.changeOwnership);
 router.get('/signup', isAdmin, admin.singupPage);
 router.post('/signup', isAdmin, admin.signup);
 
