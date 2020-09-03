@@ -25,6 +25,25 @@
 
   /* End side navigation bar  */
 
+  .tablex {
+    display: table;
+    width: 100%;
+    position: absolute;
+    height: 100%;
+  }
+
+  .table-cellx {
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0px;
+  }
+
+  .stats{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1190px;
+    background-color: #343a40;
+  }
 
 
   /* Start statistics */
@@ -224,9 +243,6 @@
 
 
 
-
-
-
   *,
   *:before,
   *:after {
@@ -245,18 +261,6 @@
     line-height: 1;
   }
 
-  .table {
-    display: table;
-    width: 100%;
-    position: absolute;
-    height: 100%;
-  }
-
-  .table-cell {
-    display: table-cell;
-    vertical-align: middle;
-    margin: 0px;
-  }
 
   #main {
     width: 360px;

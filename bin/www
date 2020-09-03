@@ -204,14 +204,6 @@ function onListening() {
       client.on('message', function (topic, message, packet) {
         try {
           let incoming_object = JSON.parse(message.toString());
-          var date = new Date();
-          date = date.getUTCFullYear() + '-' +
-              ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
-              ('00' + date.getUTCDate()).slice(-2) + ' ' + 
-              ('00' + date.getUTCHours()).slice(-2) + ':' + 
-              ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
-              ('00' + date.getUTCSeconds()).slice(-2);
-          incoming_object.time = date
           datas.push([topic,incoming_object]);
           //console.log(incoming_object);
         } catch (e) {

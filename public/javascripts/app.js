@@ -50,6 +50,7 @@ $(document).ready(function () {
                 borderColor: 'rgb(255, 79, 116)',
                 borderWidth: 4,
                 pointBorderColor: false,
+                pointRadius: 0,
                 data: temp1,
                 fill: false,
                 lineTension: .4,
@@ -62,6 +63,7 @@ $(document).ready(function () {
                 // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
                 backgroundColor: "transparent",
                 pointBorderColor: "#4bc0c0",
+                pointRadius: 0,
                 borderColor: '#4bc0c0',
                 borderWidth: 4,
                 showLine: true,
@@ -74,6 +76,7 @@ $(document).ready(function () {
                 // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
                 backgroundColor: "transparent",
                 pointBorderColor: "#ffcd56",
+                pointRadius: 0,
                 borderColor: '#ffcd56',
                 borderWidth: 4,
                 showLine: true,
@@ -86,6 +89,7 @@ $(document).ready(function () {
                 // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
                 backgroundColor: "transparent",
                 pointBorderColor: "#bada55",
+                pointRadius: 0,
                 borderColor: '#bada55',
                 borderWidth: 4,
                 showLine: true,
@@ -252,11 +256,26 @@ function onMessageArrived(message) {
     chart.data.datasets[1].data.push(data.sicaklik2);
     chart.data.datasets[2].data.push(data.sicaklik3);
     chart.data.datasets[3].data.push(data.sicaklik4);
-    chart.data.datasets[0].data.shift();
-    chart.data.datasets[1].data.shift();
-    chart.data.datasets[2].data.shift();
-    chart.data.datasets[3].data.shift();
+    chart.data.datasets[0].data.pop();
+    chart.data.datasets[1].data.pop();
+    chart.data.datasets[2].data.pop();
+    chart.data.datasets[3].data.pop();
     chart.update();
+
+    $('#t1').text(data.bataryaGerilim[0]);
+    $('#t2').text(data.bataryaGerilim[1]);
+    $('#t3').text(data.bataryaGerilim[2]);
+    $('#t4').text(data.bataryaGerilim[3]);
+    $('#t5').text(data.bataryaGerilim[4]);
+    $('#t6').text(data.bataryaGerilim[5]);
+    $('#t7').text(data.bataryaGerilim[6]);
+    $('#t8').text(data.bataryaGerilim[7]);
+    $('#t9').text(data.bataryaGerilim[8]);
+    $('#t10').text(data.bataryaGerilim[9]);
+    $('#t11').text(data.bataryaGerilim[10]);
+    $('#t12').text(data.bataryaGerilim[11]);
+    $('#t13').text(data.bataryaGerilim[12]);
+    $('#t14').text(data.bataryaGerilim[13]);
 
 }
 
