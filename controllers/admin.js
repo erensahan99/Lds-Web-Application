@@ -18,6 +18,16 @@ const hashGenerator = function (password) {
 }
 
 const getLastLocs = function(vehicles, currentNum, result, vehicleCount, clientCount, adminCount, req, res){
+    console.log(vehicles);
+    if(vehicles.length == 0){
+        res.render('admin/adminPage', {
+            user: req.user.dataValues,
+            vehicleCount: vehicleCount,
+            clientCount: clientCount,
+            adminCount: adminCount,
+            lastLocs: result
+        });
+    }else
     models.Data.findOne({
         where:{
             [Op.and]: [{dataName : 'gps'}, {macAddress: vehicles[currentNum].macAddress}],
