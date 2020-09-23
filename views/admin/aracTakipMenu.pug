@@ -9,12 +9,31 @@ html(lang='en')
     include ../common/sidebar.pug
     +sidebar(user)
   body.bg-secondary
+    input#user(type="text" hidden=true name="user" value=user)
     .container
+      //form(action='/aractakip',method='post')
+      table.mt-5.table.table-dark.table-hover(border='1')
+        thead
+          tr
+          td Takma Adı
+          td MAC Adresi
+          td Renk
+          td
+        tbody
+          for vehicle in vehicles
+            tr
+            td #{vehicle.alias}
+            td #{vehicle.macAddress}
+            td #{vehicle.color}
+            td(style='width:20px;')
+              a.btn.btn-danger(id=vehicle.macAddress href="/aractakip/" + vehicle.macAddress, role='button', style='width:20px; height:20px;').rounded-circle
+
 
 
     include ../common/footer.pug
     +footer()
-    script(src="/javascripts/adminPage.js" type="text/javascript")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript")
+    script(src="/javascripts/aracTakipMenu.js" type="text/javascript")
 
 
     

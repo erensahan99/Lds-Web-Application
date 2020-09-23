@@ -1,4 +1,10 @@
+//var coords = {lat:40.9014805, lng:31.1656715};
+var defaultCoords = {lat:39.0578771, lng:34.4999527};
+var coords = {};
+
+var user = document.getElementById("user").value;
 var chart;
+var lastLoc = {}
 
 $(document).ready(function () {
     // Start chart
@@ -121,14 +127,6 @@ $(document).ready(function () {
         }
     });
 
-
-
-    $('#map').vectorMap({
-        map: 'turkey_1_mill_en',
-        selector: "#map",
-        zoomButtons: true,
-        scale: 1
-    });
 });
 
 // Called after form input is processed
@@ -158,8 +156,6 @@ function startConnect() {
         useSSL: true,
         cleanSession: true
     });
-
-
 }
 
 // Called when the client connects
@@ -169,6 +165,13 @@ function onConnect() {
 
     // Subscribe to the requested topic
     client.subscribe(topic);
+
+    client.subscribe('connection/client');
+
+    message = new Paho.MQTT.Message(user);
+    message.destinationName = 'connection/client/online';
+    message.qos = 0;
+    client.send(message);
 }
 
 // Called when the client loses its connection
@@ -209,74 +212,95 @@ function numberToColorHsl(i) {
 
 // Called when a message arrives
 function onMessageArrived(message) {
-    var data = JSON.parse(message.payloadString);
-    $('#hizText').text(data.hiz);
-    $('#sarjText').text(data.sarj);
-    document.getElementById("battery-icon").style.color = numberToColorHsl(data.sarj);
-    if (data.sarj >= 95) {
-        document.getElementById("battery-icon").classList.add('fa-battery-full');
-        document.getElementById("battery-icon").classList.remove('fa-battery-empty');
-        document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
-        document.getElementById("battery-icon").classList.remove('fa-battery-half');
-        document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
-    } else if (data.sarj >= 75) {
-        document.getElementById("battery-icon").classList.add('fa-battery-three-quarters');
-        document.getElementById("battery-icon").classList.remove('fa-battery-empty');
-        document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
-        document.getElementById("battery-icon").classList.remove('fa-battery-half');
-        document.getElementById("battery-icon").classList.remove('fa-battery-full');
-    } else if (data.sarj >= 50) {
-        document.getElementById("battery-icon").classList.add('fa-battery-half');
-        document.getElementById("battery-icon").classList.remove('fa-battery-empty');
-        document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
-        document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
-        document.getElementById("battery-icon").classList.remove('fa-battery-full');
-    } else if (data.sarj > 5) {
-        document.getElementById("battery-icon").classList.add('fa-battery-quarter');
-        document.getElementById("battery-icon").classList.remove('fa-battery-half');
-        document.getElementById("battery-icon").classList.remove('fa-battery-empty');
-        document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
-        document.getElementById("battery-icon").classList.remove('fa-battery-full');
-    } else {
-        document.getElementById("battery-icon").classList.add('fa-battery-empty');
-        document.getElementById("battery-icon").classList.remove('fa-battery-half');
-        document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
-        document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
-        document.getElementById("battery-icon").classList.remove('fa-battery-full');
+    if(message.destinationName == 'connection/client'){
+        message = new Paho.MQTT.Message(user);
+        message.destinationName = 'connection/client/online';
+        message.qos = 0;
+        client.send(message);
     }
+    else if(message.destinationName == 'connection/client/online'){}
+    else{
+        var data = JSON.parse(message.payloadString);
+        $('#hizText').text(data.hiz);
+        $('#sarjText').text(data.sarj);
+        document.getElementById("battery-icon").style.color = numberToColorHsl(data.sarj);
+        if (data.sarj >= 95) {
+            document.getElementById("battery-icon").classList.add('fa-battery-full');
+            document.getElementById("battery-icon").classList.remove('fa-battery-empty');
+            document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
+            document.getElementById("battery-icon").classList.remove('fa-battery-half');
+            document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
+        } else if (data.sarj >= 75) {
+            document.getElementById("battery-icon").classList.add('fa-battery-three-quarters');
+            document.getElementById("battery-icon").classList.remove('fa-battery-empty');
+            document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
+            document.getElementById("battery-icon").classList.remove('fa-battery-half');
+            document.getElementById("battery-icon").classList.remove('fa-battery-full');
+        } else if (data.sarj >= 50) {
+            document.getElementById("battery-icon").classList.add('fa-battery-half');
+            document.getElementById("battery-icon").classList.remove('fa-battery-empty');
+            document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
+            document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
+            document.getElementById("battery-icon").classList.remove('fa-battery-full');
+        } else if (data.sarj > 5) {
+            document.getElementById("battery-icon").classList.add('fa-battery-quarter');
+            document.getElementById("battery-icon").classList.remove('fa-battery-half');
+            document.getElementById("battery-icon").classList.remove('fa-battery-empty');
+            document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
+            document.getElementById("battery-icon").classList.remove('fa-battery-full');
+        } else {
+            document.getElementById("battery-icon").classList.add('fa-battery-empty');
+            document.getElementById("battery-icon").classList.remove('fa-battery-half');
+            document.getElementById("battery-icon").classList.remove('fa-battery-quarter');
+            document.getElementById("battery-icon").classList.remove('fa-battery-three-quarters');
+            document.getElementById("battery-icon").classList.remove('fa-battery-full');
+        }
 
-    $('#akimText').text(data.akim + " A");
-    $('#sicaklik1Text').text(data.sicaklik1);
-    $('#sicaklik2Text').text(data.sicaklik2);
-    $('#sicaklik3Text').text(data.sicaklik3);
-    $('#sicaklik4Text').text(data.sicaklik4);
+        $('#akimText').text(data.akim + " A");
+        $('#sicaklik1Text').text(data.sicaklik1);
+        $('#sicaklik2Text').text(data.sicaklik2);
+        $('#sicaklik3Text').text(data.sicaklik3);
+        $('#sicaklik4Text').text(data.sicaklik4);
 
-    chart.data.labels.push("deneme");
-    chart.data.datasets[0].data.push(data.sicaklik1);
-    chart.data.datasets[1].data.push(data.sicaklik2);
-    chart.data.datasets[2].data.push(data.sicaklik3);
-    chart.data.datasets[3].data.push(data.sicaklik4);
-    chart.data.datasets[0].data.pop();
-    chart.data.datasets[1].data.pop();
-    chart.data.datasets[2].data.pop();
-    chart.data.datasets[3].data.pop();
-    chart.update();
+        chart.data.labels.push("deneme");
+        chart.data.datasets[0].data.push(data.sicaklik1);
+        chart.data.datasets[1].data.push(data.sicaklik2);
+        chart.data.datasets[2].data.push(data.sicaklik3);
+        chart.data.datasets[3].data.push(data.sicaklik4);
+        chart.data.datasets[0].data.pop();
+        chart.data.datasets[1].data.pop();
+        chart.data.datasets[2].data.pop();
+        chart.data.datasets[3].data.pop();
+        chart.update();
 
-    $('#t1').text(data.bataryaGerilim[0]);
-    $('#t2').text(data.bataryaGerilim[1]);
-    $('#t3').text(data.bataryaGerilim[2]);
-    $('#t4').text(data.bataryaGerilim[3]);
-    $('#t5').text(data.bataryaGerilim[4]);
-    $('#t6').text(data.bataryaGerilim[5]);
-    $('#t7').text(data.bataryaGerilim[6]);
-    $('#t8').text(data.bataryaGerilim[7]);
-    $('#t9').text(data.bataryaGerilim[8]);
-    $('#t10').text(data.bataryaGerilim[9]);
-    $('#t11').text(data.bataryaGerilim[10]);
-    $('#t12').text(data.bataryaGerilim[11]);
-    $('#t13').text(data.bataryaGerilim[12]);
-    $('#t14').text(data.bataryaGerilim[13]);
+        $('#t1').text(data.bataryaGerilim[0]);
+        $('#t2').text(data.bataryaGerilim[1]);
+        $('#t3').text(data.bataryaGerilim[2]);
+        $('#t4').text(data.bataryaGerilim[3]);
+        $('#t5').text(data.bataryaGerilim[4]);
+        $('#t6').text(data.bataryaGerilim[5]);
+        $('#t7').text(data.bataryaGerilim[6]);
+        $('#t8').text(data.bataryaGerilim[7]);
+        $('#t9').text(data.bataryaGerilim[8]);
+        $('#t10').text(data.bataryaGerilim[9]);
+        $('#t11').text(data.bataryaGerilim[10]);
+        $('#t12').text(data.bataryaGerilim[11]);
+        $('#t13').text(data.bataryaGerilim[12]);
+        $('#t14').text(data.bataryaGerilim[13]);
 
+        if(data.gps!='None,None'){
+            try{
+                var newCoords = data.gps.split(',');
+                console.log(newCoords);
+                coords.lat=newCoords[0];
+                coords.lng=newCoords[1];
+                moveMapToLoc(window.map);
+            }
+            catch(err){
+                console.log(err)
+            }
+        }
+    }
 }
 
 // Called when the disconnection button is pressed
@@ -285,4 +309,64 @@ function startDisconnect() {
     document.getElementById("messages").innerHTML += '<span>Disconnected</span><br/>';
 }
 
-startConnect();
+
+
+var vehicleMarker;
+
+function moveMapToLoc(map){
+    map.setCenter(coords);
+    map.setZoom(17);
+    
+    if(vehicleMarker)
+        map.removeObject(vehicleMarker);
+
+    vehicleMarker = new H.map.Marker(coords);
+    map.addObject(vehicleMarker);
+}
+
+function moveMapToLastLoc(map){
+    var gps = JSON.parse(document.getElementById("gps").value).data.split(',');
+    // console.log(gps);
+    lastLoc.lat = gps[0];
+    lastLoc.lng = gps[1];
+    
+    if(gps != ''){
+        map.setCenter(lastLoc);
+        map.setZoom(17);
+
+        if(vehicleMarker)
+        map.removeObject(vehicleMarker);
+
+        vehicleMarker = new H.map.Marker(lastLoc);
+        map.addObject(vehicleMarker);
+    }
+    else{
+        map.setCenter(defaultCoords);
+        map.setZoom(6.2);
+    }    
+}
+  
+   
+var platform = new H.service.Platform({
+apikey: '4oMgmQA4vo50vCUbVR_bAUvVQWhKzt879J3Gn45awJM'
+});
+var defaultLayers = platform.createDefaultLayers();
+
+var map = new H.Map(document.getElementById('map'),
+defaultLayers.raster.satellite.map,{
+center: {lat:39.0578771, lng:34.4999527},
+zoom: 6.2,
+pixelRatio: window.devicePixelRatio || 1
+});
+
+window.addEventListener('resize', () => map.getViewPort().resize());
+var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+
+window.onload = function () {
+    startConnect();
+    moveMapToLastLoc(map);
+    map.getViewPort().resize();
+}

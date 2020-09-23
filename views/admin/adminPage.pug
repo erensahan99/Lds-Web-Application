@@ -1,6 +1,7 @@
 doctype html
 html(lang='en')
   link(rel="stylesheet" href="/stylesheets/adminMenu.css")
+  link(rel='stylesheet', type='text/css', href='https://js.api.here.com/v3/3.1/mapsjs-ui.css')
   include ../common/header.pug
   +head("Lodos E2")
   header
@@ -11,6 +12,12 @@ html(lang='en')
     include ../common/sidebar.pug
     +sidebar(user)
   body.bg-secondary
+    input#user(type="text" hidden=true name="user" value=user)
+    input#lastLocs(type="text" hidden=true name="lastLocs" value=lastLocs)
+    // input#adminCount(type="text" hidden=true name="adminCount" value=adminCount)
+    // input#clientCount(type="text" hidden=true name="clientCount" value=clientCount)
+    // input#vehicleCount(type="text" hidden=true name="vehicleCount" value=vehicleCount)
+
     section#contents.container
       .welcome
         .container-fluid
@@ -26,94 +33,39 @@ html(lang='en')
                 i.fa.fa-car.fa-fw.bg-info
                 .info
                   h3 Online Araç
-                    span.ml-2 7
+                    span#onlineVehicle.ml-2 0
                   p Toplam Kayıtlı Araç:
-                    span.ml-2 10
+                    span.ml-2 #{vehicleCount}
             .col-md-4
               .box
                 i.fa.fa-users.fa-fw.bg-warning
                 .info
                   h3 Aktif Kullanıcı
-                    span.ml-2 3
+                    span#onlineClient.ml-2 0
                   p Toplam Kullanıcı:
-                    span.ml-2 10
+                    span.ml-2 #{clientCount}
             .col-md-4
               .box
                 i.fa.fa-eye.fa-fw.bg-secondary
                 .info
                   h3 Aktif Admin
-                    span.ml-2 1
+                    span#onlineAdmin.ml-2 0
                   p Toplam Admin:
-                    span.ml-2 2
-      section.charts
-        .container-fluid
-          .row
-            .col-md-6
-              .chart-container
-                h3 Chart
-                canvas#myChart
-            .col-md-6
-              .chart-container
-                h3 Chart2
-                canvas#myChart2
-      section.statis.text-center
-        .container-fluid
-          .row
-            .col-md-3
-              .box.bg-primary
-                i.fa.fa-eye
-                h3 5,154
-                p.lead Page views
-            .col-md-3
-              .box.danger
-                i.fa.fa-user-o
-                h3 245
-                p.lead User registered
-            .col-md-3
-              .box.warning
-                i.fa.fa-shopping-cart
-                h3 5,154
-                p.lead Product sales
-            .col-md-3
-              .box.success
-                i.fa.fa-handshake-o
-                h3 5,154
-                p.lead Transactions
+                    span.ml-2 #{adminCount}
+      
       section.chrt3.mt-5
         #map
-      section.admins
+      section.admins(style='height:500px;')
         .container-fluid
           .row
             .col-md-6
               .box
-                h3 Admins:
-                .admin
-                  .info
-                    h3 Joge Lucky
-                    p Lorem ipsum dolor sit amet.
-                .admin
-                  .info
-                    h3 Joge Lucky
-                    p Lorem ipsum dolor sit amet.
-                .admin
-                  .info
-                    h3 Joge Lucky
-                    p Lorem ipsum dolor sit amet.
+                h3 Aktif Adminler:
+                ul#ulAdmin.pl-0                   
             .col-md-6
               .box
-                h3 Moderators:
-                .admin
-                  .info
-                    h3 Joge Lucky
-                    p Lorem ipsum dolor sit amet.
-                .admin
-                  .info
-                    h3 Joge Lucky
-                    p Lorem ipsum dolor sit amet.
-                .admin
-                  .info
-                    h3 Joge Lucky
-                    p Lorem ipsum dolor sit amet.
+                h3 Aktif Kullanıcılar:
+                ul#ulClient.pl-0
       
 
 
@@ -122,11 +74,12 @@ html(lang='en')
     
     script(src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0" type="text/javascript")
     
-    link(rel='stylesheet', href='/stylesheets/jquery-jvectormap-2.0.1.css', type='text/css', media='screen')
-    script(src='http://code.jquery.com/jquery-1.11.1.min.js')
-    script(src='/javascripts/jquery-jvectormap-2.0.1.min.js')
-    script(src='/javascripts/jquery-jvectormap-data-turkey-tr-en.js')
+    script(type='text/javascript', src='https://js.api.here.com/v3/3.1/mapsjs-core.js')
+    script(type='text/javascript', src='https://js.api.here.com/v3/3.1/mapsjs-service.js')
+    script(type='text/javascript', src='https://js.api.here.com/v3/3.1/mapsjs-ui.js')
+    script(type='text/javascript', src='https://js.api.here.com/v3/3.1/mapsjs-mapevents.js')
     
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js" type="text/javascript")
     script(src="/javascripts/adminPage.js" type="text/javascript")
 
     

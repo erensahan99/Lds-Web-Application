@@ -14,13 +14,25 @@ exports.mainPage = function (req, res, next) {
         order: [['time', 'DESC']],
         limit:100
     }).then(data => {
-        res.render('user/index', {
-            user: req.user.dataValues,  
-            data: data,
-            macAddress: req.user.macAddress
-        });
-    }).catch(err => {
-        console.log("err0= " + err);
+        models.Data.findOne({
+            attributes: ['data'],
+            raw: true,
+            where:{
+                [Op.and]: [{dataName : 'gps'}, {macAddress: req.user.macAddress}],
+                [Op.not]: [{data:['None,None']}]
+            },
+            order: [['time', 'DESC']],
+            limit:1
+        }).then(gps => {
+            res.render('user/index', {
+                user: req.user.dataValues,  
+                data: data,
+                macAddress: req.user.macAddress,
+                gps: gps
+            });
+        }).catch(err => {
+            console.log("err0= " + err);
+        })
     })
 };
 

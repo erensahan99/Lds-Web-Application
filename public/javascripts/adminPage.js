@@ -1,117 +1,158 @@
 // Other important pens.
-// Map: https://codepen.io/themustafaomar/pen/ZEGJeZq
+
 // Navbar: https://codepen.io/themustafaomar/pen/VKbQyZ
 
-$(function () {
+var user = document.getElementById("user").value;
+var clients = [], admins = [], vehicles = [];
 
-    'use strict';
+function countConnections(){
+    try{
+        $('#ulAdmin').empty();
+        $('#ulClient').empty();
+        clients.length = 0
+        admins.length = 0
+        vehicles.length = 0
 
-    // Start chart
-    var chart = document.getElementById('myChart');
-    Chart.defaults.global.animation.duration = 2000; // Animation duration
-    Chart.defaults.global.title.display = false; // Remove title
-    Chart.defaults.global.title.text = "Chart"; // Title
-    Chart.defaults.global.title.position = 'bottom'; // Title position
-    Chart.defaults.global.defaultFontColor = '#999'; // Font color
-    Chart.defaults.global.defaultFontSize = 10; // Font size for every label
-
-    // Chart.defaults.global.tooltips.backgroundColor = '#FFF'; // Tooltips background color
-    Chart.defaults.global.tooltips.borderColor = 'white'; // Tooltips border color
-    Chart.defaults.global.legend.labels.padding = 0;
-    Chart.defaults.scale.ticks.beginAtZero = true;
-    Chart.defaults.scale.gridLines.zeroLineColor = 'rgba(255, 255, 255, 0.1)';
-    Chart.defaults.scale.gridLines.color = 'rgba(255, 255, 255, 0.02)';
-    Chart.defaults.global.legend.display = false;
-
-    var myChart = new Chart(chart, {
-        type: 'bar',
-        data: {
-            labels: ["January", "February", "March", "April", "May", 'Jul'],
-            datasets: [{
-                label: "Lost",
-                fill: false,
-                lineTension: 0,
-                data: [45, 25, 40, 20, 45, 20],
-                pointBorderColor: "#4bc0c0",
-                borderColor: '#4bc0c0',
-                borderWidth: 2,
-                showLine: true,
-            }, {
-                label: "Succes",
-                fill: false,
-                lineTension: 0,
-                startAngle: 2,
-                data: [20, 40, 20, 45, 25, 60],
-                // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
-                backgroundColor: "transparent",
-                pointBorderColor: "#ff6384",
-                borderColor: '#ff6384',
-                borderWidth: 2,
-                showLine: true,
-            }]
-        },
-    });
-
-    //  Chart ( 2 )
-    var Chart2 = document.getElementById('myChart2').getContext('2d');
-    var chart = new Chart(Chart2, {
-        type: 'line',
-        data: {
-            labels: ["January", "February", "March", "April", 'test', 'test', 'test', 'test'],
-            datasets: [{
-                label: "My First dataset",
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 79, 116)',
-                borderWidth: 2,
-                pointBorderColor: false,
-                data: [5, 10, 5, 8, 20, 30, 20, 10],
-                fill: false,
-                lineTension: .4,
-            }, {
-                label: "Month",
-                fill: false,
-                lineTension: .4,
-                startAngle: 2,
-                data: [20, 14, 20, 25, 10, 15, 25, 10],
-                // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
-                backgroundColor: "transparent",
-                pointBorderColor: "#4bc0c0",
-                borderColor: '#4bc0c0',
-                borderWidth: 2,
-                showLine: true,
-            }, {
-                label: "Month",
-                fill: false,
-                lineTension: .4,
-                startAngle: 2,
-                data: [40, 20, 5, 10, 30, 15, 15, 10],
-                // , '#ff6384', '#4bc0c0', '#ffcd56', '#457ba1'
-                backgroundColor: "transparent",
-                pointBorderColor: "#ffcd56",
-                borderColor: '#ffcd56',
-                borderWidth: 2,
-                showLine: true,
-            }]
-        },
-
-        // Configuration options
-        options: {
-            title: {
-                display: false
-            }
+        message = new Paho.MQTT.Message('');
+        message.qos = 2;
+        message.destinationName = 'connection/admin';
+        client.send(message);
+        message.destinationName = 'connection/client';
+        client.send(message);
+        message.destinationName = 'connection/vehicle';
+        client.send(message);
         }
+        catch(err){
+            console.log(err)
+        }
+}
+
+// Called after form input is processed
+function startConnect() {
+    // Generate a random client ID
+    clientID = "AdminID-" + parseInt(Math.random() * 100);
+
+    // Fetch the hostname/IP address and port number from the form
+    host = 'postman.cloudmqtt.com';
+    port = '33787';
+    username = 'LodosAdmin';
+    password = '3548788';
+
+    // Initialize new Paho client connection
+    client = new Paho.MQTT.Client(host, Number(port), clientID);
+
+    // Set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+    client.onConnectionLost = onConnectionLost;
+
+    // Connect the client, if successful, call onConnect function
+    client.connect({
+        onSuccess: onConnect,
+        userName: username,
+        password: password,
+        useSSL: true,
+        cleanSession: true
+    });
+}
+
+// Called when the client connects
+function onConnect() {
+    client.subscribe('connection/admin/online');
+    client.subscribe('connection/client/online');
+    client.subscribe('connection/vehicle/online');
+    client.subscribe('connection/admin');
+    countConnections();
+    setInterval(countConnections,5000);
+}
+
+// Called when the client loses its connection
+function onConnectionLost(responseObject) {
+
+}
+
+// Called when a message arrives
+function onMessageArrived(message) {
+
+    if(message.destinationName == 'connection/admin'){
+        message = new Paho.MQTT.Message(user);
+        message.destinationName = 'connection/admin/online';
+        message.qos = 0;
+        client.send(message);
+    }
+    else{
+        if(message.destinationName == 'connection/admin/online'){
+            if(!admins.includes(message.payloadString))
+                admins.push(message.payloadString)
+            
+                msg = JSON.parse(message.payloadString)
+                $('#ulAdmin').append('<li class="admin"><div class="info"><h3>'+ msg.name + ' ' + msg.lastname +'</h3><p>' + msg.username + '</p></div></li>');
+        }
+        else if(message.destinationName == 'connection/client/online'){
+            if(!clients.includes(message.payloadString))
+                clients.push(message.payloadString)
+                msg = JSON.parse(message.payloadString)
+                $('#ulClient').append('<li class="admin"><div class="info"><h3>'+ msg.name + ' ' + msg.lastname +'</h3><p>' + msg.username + '</p></div></li>');
+        }
+        else if(message.destinationName == 'connection/vehicle/online'){
+            if(!vehicles.includes(message.payloadString))
+                vehicles.push(message.payloadString)
+        }
+        $('#onlineAdmin').text(admins.length)
+        $('#onlineClient').text(clients.length)
+        $('#onlineVehicle').text(vehicles.length)       
+    }
+
+}
+
+
+
+var showLastLocs = function(){
+    var lastLocs = JSON.parse(document.getElementById('lastLocs').value);
+    
+    var locs = []
+
+    lastLocs.forEach(lastLoc => {
+        var loc = lastLoc.loc.split(',');
+        locs.push({lat:loc[0], lng:loc[1]})
     });
 
+    /*
+    locs.push({lat:40.9601817, lng:29.1233131})
+    locs.push({lat:36.77872, lng:31.4414554})
+    locs.push({lat:39.9477068, lng:32.8153198})
+    */
 
-
-    $('#map').vectorMap({
-        map: 'turkey_1_mill_en',
-        selector: "#map",
-        zoomButtons: true,
-        scale: 1
+    locs.forEach(loc => {
+        map.addObject(new H.map.Marker(loc));
     });
 
-    window.addEventListener('resize', () => {
-        jsvmap.updateSize()
-    })
-})
+}
+
+
+// map codes
+var platform = new H.service.Platform({
+    apikey: '4oMgmQA4vo50vCUbVR_bAUvVQWhKzt879J3Gn45awJM'
+});
+var defaultLayers = platform.createDefaultLayers();
+
+var map = new H.Map(document.getElementById('map'),
+    defaultLayers.raster.satellite.map,{
+    center: {lat:39.0578771, lng:34.4999527},
+    zoom: 6.2,
+    pixelRatio: window.devicePixelRatio || 1
+});
+
+window.addEventListener('resize', () => map.getViewPort().resize());
+
+var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+
+
+window.onload = function () {
+    map.getViewPort().resize();
+    showLastLocs();
+    startConnect();
+}

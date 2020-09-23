@@ -175,63 +175,39 @@
 
   
   
-  .main-color {
-    color: #ffc107
+.main-color {
+  color: #ffc107
+}
+.warning {background-color: #f0ad4e}
+.danger {background-color: #d9534f}
+.success {background-color: #5cb85c}
+.inf {background-color: #5bc0de}
+
+
+/* Start media query */
+
+@media (max-width: 767px) {
+  #contents {
+    margin: 0 !important
   }
-  .warning {background-color: #f0ad4e}
-  .danger {background-color: #d9534f}
-  .success {background-color: #5cb85c}
-  .inf {background-color: #5bc0de}
-  
-  
-  /* Start media query */
-  
-  @media (max-width: 767px) {
-    #contents {
-      margin: 0 !important
-    }
-    .statistics .box {
-      margin-bottom: 25px !important;
-    }
+  .statistics .box {
+    margin-bottom: 25px !important;
   }
-  
+}
 
 
 #map {
-    margin: auto;
-    width: 75%;
-    height: 400px;
-    text-align: center;
-  }
-#map svg{
-    height: 100%;
-    width: 100%;
+  width: 1190px;
+  height: 450px;
+  background: grey;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 15px;
 }
-#map svg g{
-    height: 100%;
-    width: 100%;
+
+#map canvas{
+  border-radius: 15px;
 }
-  
-  @media (max-width: 768px) {
-    #map {
-      width: 450px;
-      height: 250px;
-    }
-  }
-  
-  @media (max-width: 500px) {
-    #map {
-      width: 375px;
-      height: 200px;
-    }
-  }
-  
-
-
-
-
-
-
 
 
 

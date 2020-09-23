@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const myPassword = require('../passport_setup')(passport);
 
+const { Op, MACADDR } = require("sequelize");
 const models = require('../models');
 const {
     sequelize
@@ -16,12 +17,60 @@ const hashGenerator = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 }
 
+const getLastLocs = function(vehicles, currentNum, result, vehicleCount, clientCount, adminCount, req, res){
+    models.Data.findOne({
+        where:{
+            [Op.and]: [{dataName : 'gps'}, {macAddress: vehicles[currentNum].macAddress}],
+            [Op.not]: [{data:['None,None']}]
+        },
+        order: [['time', 'DESC']],
+        limit:1,
+        raw: true
+    }).then(gps => {
+        if(gps){
+            result.push({'macAddress':vehicles[currentNum].macAddress, 'loc':gps.data});
+        }
+        
+        currentNum--;
+
+        if(currentNum <= 1){
+            console.log(result);
+
+            res.render('admin/adminPage', {
+                user: req.user.dataValues,
+                vehicleCount: vehicleCount,
+                clientCount: clientCount,
+                adminCount: adminCount,
+                lastLocs: result
+            });
+        }
+
+        return getLastLocs(vehicles, currentNum, result, vehicleCount, clientCount, adminCount, req, res);
+    }).catch(err => {
+        if(currentNum!=-1)
+            console.log('err' + currentNum +':'+err)
+    })
+}
+
 
 exports.adminPage = function (req, res, next) {
-
-    res.render('admin/adminPage', {
-        user: req.user.dataValues
-    });
+    return models.Vehicle.findAll({
+        attributes: ['macAddress'],
+        raw: true
+    }).then(vehicles => {
+        var vehicleCount = Object.values(vehicles).length;
+        models.User.count({
+            where: [{ 'isAdmin' : 0 }]
+        }).then(clientCount => {
+            models.User.count({
+                where: [{ 'isAdmin' : 1 }]
+            }).then(adminCount => {
+                getLastLocs(vehicles, vehicleCount-1, [], vehicleCount, clientCount, adminCount, req, res);
+            }).catch(err => {
+                console.log("err5= " + err);
+            })
+        })
+    })
 }
 
 exports.userList = function (req, res, next) {
@@ -69,9 +118,44 @@ exports.addUser = function (req, res, next) {
 }
 
 exports.aracTakipMenu = function (req, res, next) {
-    res.render('admin/aracTakipMenu', {
-        user: req.user.dataValues
-    });
+    return models.Vehicle.findAll().then(vehicles => {
+        res.render('admin/aracTakipMenu', {
+            user: req.user.dataValues,
+            vehicles: vehicles
+        });
+    })
+}
+
+exports.aracTakip = function (req, res, next) {
+    return models.Data.findAll({
+        where: {
+           [Op.or]: [{dataName : 'sicaklik1'},{dataName : 'sicaklik2'},{dataName : 'sicaklik3'},{dataName : 'sicaklik4'}],
+           [Op.and]: [{macAddress: req.params.macAddress}]
+        },
+        order: [['time', 'DESC']],
+        limit:100
+    }).then(data => {
+        models.Data.findOne({
+            attributes: ['data'],
+            raw: true,
+            where:{
+                [Op.and]: [{dataName : 'gps'}, {macAddress: req.params.macAddress}],
+                [Op.not]: [{data:['None,None']}]
+            },
+            order: [['time', 'DESC']],
+            limit:1
+
+        }).then(gps => {
+            res.render('admin/aracTakip', {
+                user: req.user.dataValues,  
+                data: data,
+                macAddress: req.params.macAddress,
+                gps: gps
+            });
+        }).catch(err => {
+            console.log("err0= " + err);
+        })
+    })
 }
 
 exports.vehicleList = function (req, res, next) {
@@ -123,7 +207,7 @@ exports.changeOwnership = function (req, res, next) {
                         console.log(err)
                     })
                 } else {
-                    console.log(values)
+                    //console.log(values)
                     models.Ownership.create({
                         macAddress: values[1],
                         userId: values[0]

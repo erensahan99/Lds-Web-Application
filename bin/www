@@ -180,7 +180,8 @@ function onListening() {
                 'time': data[1].time
               });
             } else {
-              console.log("Error: Unregistered vehicle data. MAC: " + data.macAddress + " Time: " + data.time)
+              if(data.macAddress)
+                console.log("Error: Unregistered vehicle data. MAC: " + data.macAddress + " Time: " + data.time)
             }
           });
           var total = datas.length;
@@ -205,9 +206,9 @@ function onListening() {
         try {
           let incoming_object = JSON.parse(message.toString());
           datas.push([topic,incoming_object]);
-          //console.log(incoming_object);
+          // console.log(incoming_object);
         } catch (e) {
-          console.log('Error parsing JSON message: ' + e);
+          // console.log('Error parsing JSON message: ' + e);
         }
       });
     });
