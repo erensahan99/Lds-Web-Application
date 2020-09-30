@@ -1,21 +1,27 @@
-
 var user = document.getElementById("user").value;
 var vehicles = [];
+var newVehicles = [];
 
-function countConnections(){
-    try{
+function countConnections() {
+    try {
         var buttons = document.getElementsByClassName('btn');
         for (const button in buttons) {
-                if (buttons.hasOwnProperty(button)) {
-                    const element = buttons[button];
-                    if (element.classList.contains('btn-success')){
-                        element.classList.remove('btn-success')
-                        element.classList.add('btn-danger')
-                    }
+            if (buttons.hasOwnProperty(button)) {
+                const element = buttons[button];
+                if (element.classList.contains('btn-success')) {
+                    element.classList.remove('btn-success')
+                    element.classList.add('btn-danger')
+                }
             }
         }
-        
-        vehicles.length = 0
+
+        vehicles.forEach(vehicle => {
+            document.getElementById(vehicle).classList.add('btn-success');
+            document.getElementById(vehicle).classList.remove('btn-danger');
+        })
+
+        vehicles = Array.from(newVehicles);
+        newVehicles.length = 0;
 
         message = new Paho.MQTT.Message('');
         message.qos = 2;
@@ -25,10 +31,9 @@ function countConnections(){
         client.send(message);
         message.destinationName = 'connection/vehicle';
         client.send(message);
-        }
-        catch(err){
-            console.log(err)
-        }
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 function startConnect() {
@@ -65,7 +70,7 @@ function onConnect() {
     client.subscribe('connection/vehicle/online');
     client.subscribe('connection/admin');
     countConnections();
-    setInterval(countConnections,5000);
+    setInterval(countConnections, 3000);
 }
 
 // Called when the client loses its connection
@@ -76,21 +81,16 @@ function onConnectionLost(responseObject) {
 // Called when a message arrives
 function onMessageArrived(message) {
 
-    if(message.destinationName == 'connection/admin'){
+    if (message.destinationName == 'connection/admin') {
         message = new Paho.MQTT.Message(user);
         message.destinationName = 'connection/admin/online';
         message.qos = 0;
         client.send(message);
-    }
-    else{
-        if(message.destinationName == 'connection/vehicle/online'){
-            if(!vehicles.includes(message.payloadString))
-                vehicles.push(message.payloadString)
-            vehicles.forEach(vehicle=>{
-                document.getElementById(vehicle).classList.add('btn-success');
-                document.getElementById(vehicle).classList.remove('btn-danger');
-            })
-        }    
+    } else {
+        if (message.destinationName == 'connection/vehicle/online') {
+            if (!newVehicles.includes(message.payloadString))
+                newVehicles.push(message.payloadString)
+        }
     }
 
 }
