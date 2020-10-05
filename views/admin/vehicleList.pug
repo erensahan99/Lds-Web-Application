@@ -13,16 +13,26 @@ html(lang='en')
     .container
       table.mt-5.table.table-dark.table-hover(border='1')
           thead
-              tr
-              td Takma Adı
-              td MAC Adresi
-              td Renk
+            tr
+            td
+              h5.text-center.font-weight-bold Takma Adı
+            td
+              h5.text-center.font-weight-bold  MAC Adresi
+            td
+              h5.text-center.font-weight-bold  Renk
           tbody
-              for vehicle in vehicles
-                  tr
-                  td #{vehicle.alias}
-                  td #{vehicle.macAddress}
-                  td #{vehicle.color}
+            for vehicle in vehicles
+              tr
+              td #{vehicle.alias}
+              td #{vehicle.macAddress}
+              if vehicle.color == 0
+                td Kırmızı
+              else if vehicle.color == 1
+                td Mavi
+              else if vehicle.color == 2
+                td Siyah
+              else if vehicle.color == 3
+                td Beyaz
 
 
     include ../common/footer.pug
