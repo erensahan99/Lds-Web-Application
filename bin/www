@@ -186,7 +186,7 @@ function onListening() {
           });
           var total = datas.length;
           models.Data.bulkCreate(array).then(function () {
-            console.log(datas);
+            // console.log(datas);
             datas.length = 0;
             array.length = 0;
             console.log("Total Data: " + total);
