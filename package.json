@@ -28,5 +28,4 @@
   "devDependencies": {
     "pug-code-gen": ">=3.0.2"
   }
-
 }
